@@ -1,0 +1,1687 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09.02.11 — Разработка и управление программным обеспечением (ускоренный курс)</title>
+<style>
+:root{
+  --paper:#f5f2ea; --card:#fffdf8; --ink:#1b1c1a; --muted:#60635e;
+  --line:#ddd6c6; --accent:#0b5d4b; --accent2:#b45309; --soft:#efe9da;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Segoe UI",-apple-system,Roboto,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:-.01em}
+a{color:var(--accent)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.hero{padding:56px 0 36px;border-bottom:1px solid var(--line);
+  background:radial-gradient(900px 340px at 8% -20%,#e3ecdf,transparent 70%),
+             linear-gradient(180deg,#fbf8f1,var(--paper))}
+.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0}
+h1{font-size:clamp(30px,5vw,50px);line-height:1.05;margin:14px 0 14px;max-width:900px}
+.lead{font-size:clamp(16px,1.9vw,20px);color:#3c423d;max-width:780px;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{border:1px solid var(--line);background:#fffdf7;border-radius:999px;padding:6px 12px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:30px}
+.stat{background:#fffdf8;padding:16px 18px}
+.stat b{display:block;font-family:Georgia,serif;font-size:26px;line-height:1.15}
+.stat span{font-size:12.5px;color:var(--muted)}
+.nav{position:sticky;top:0;z-index:30;background:rgba(245,242,234,.94);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav ul{display:flex;gap:16px;list-style:none;margin:0;padding:11px 24px;max-width:1120px;margin:0 auto;
+  overflow-x:auto;font-size:14px;white-space:nowrap}
+.nav a{color:#3a403b;text-decoration:none;padding:3px 0;border-bottom:2px solid transparent}
+.nav a:hover{border-color:var(--accent)}
+section{padding:52px 0;border-bottom:1px solid var(--line)}
+h2{font-size:clamp(24px,3.2vw,34px);margin:0 0 8px}
+.sub{color:var(--muted);max-width:780px;margin:0 0 26px}
+.grid{display:grid;gap:18px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.card h3{margin:0 0 6px;font-size:19px}
+.card p{margin:0;color:#4a4f4a;font-size:14.5px}
+.card .tagline{display:inline-block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent2);font-weight:700;margin-bottom:8px}
+.course{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin:0 0 26px}
+.course-head{display:grid;grid-template-columns:56px 1fr auto;gap:16px;align-items:center;
+  padding:18px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fffdf8,#faf5e9)}
+.course-head .num{font-family:Georgia,serif;font-size:34px;color:var(--accent);line-height:1}
+.course-head h3{margin:0;font-size:21px}
+.course-head p{margin:4px 0 0;color:var(--muted);font-size:14px;max-width:640px}
+.course-hours{font-family:Georgia,serif;font-size:18px;white-space:nowrap;color:#3d423d}
+.sem-title{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:14px 22px 10px;font-weight:600;font-size:14px;color:#2f342f}
+.sem-title span{font-weight:400;color:var(--muted);font-size:13px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{padding:9px 16px;border-bottom:1px solid #efe8d8;text-align:left;vertical-align:top}
+th{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
+  background:#faf6ec;font-weight:700}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover{background:#fbf7ec}
+tfoot td{font-weight:700;background:#f7f1e3;border-bottom:none}
+.tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;
+  background:#eee7d6;color:#4b4f4a;white-space:nowrap}
+.tag.exam{background:#e7efe6;color:#0b5d4b}
+.status{display:grid;gap:18px}
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.label{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.status b{font-family:Georgia,serif;font-size:22px;display:block;line-height:1.2}
+input[type=date],select{width:100%;padding:9px 10px;border:1px solid #cfc5b1;border-radius:10px;
+  background:#fff;font:inherit;color:var(--ink)}
+.btn{appearance:none;border:1px solid #cfc5b1;background:#fffdf8;color:var(--ink);
+  padding:10px 16px;border-radius:11px;font:inherit;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:#9d9482;transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:#0a4d3e}
+.btn.small{padding:6px 10px;font-size:13px;font-weight:500}
+.mentor{display:grid;grid-template-columns:330px 1fr;gap:20px;align-items:start}
+.field{display:block;margin-bottom:13px}
+.field>span{display:block;font-size:13px;color:#454a45;margin-bottom:5px}
+.hint-note{font-size:12.5px;color:var(--muted);margin:12px 0 0}
+.hw-panel{min-height:280px}
+.hw-empty{color:var(--muted);font-size:14.5px;padding:20px 4px}
+.hw-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.hw-subject{font-family:Georgia,serif;font-size:22px}
+.hw-due{font-size:13px;color:var(--accent2);font-weight:600}
+.hw-meta{font-size:13px;color:var(--muted);margin:4px 0 12px}
+.bar{height:7px;background:#eee6d5;border-radius:99px;overflow:hidden;margin:10px 0 6px}
+.bar>span{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.hw-list{list-style:none;margin:0;padding:0;counter-reset:t}
+.hw-list li{display:grid;grid-template-columns:26px 1fr;gap:10px;padding:13px 0;border-bottom:1px dashed #e6ddca;counter-increment:t}
+.hw-list li:before{content:counter(t);font-family:Georgia,serif;color:var(--accent);font-size:17px;line-height:1.4}
+.hw-list input{margin-top:5px;width:17px;height:17px;accent-color:var(--accent)}
+.task-text{display:block;cursor:pointer}
+.task-text.done{text-decoration:line-through;color:#8a8f88}
+.task-meta{font-size:12px;color:var(--muted);margin-top:3px}
+details{margin-top:5px;font-size:13px}
+summary{cursor:pointer;color:var(--accent);outline:none}
+details p{margin:6px 0 0;color:#4c514c}
+.criteria{background:#f8f4e8;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:16px;font-size:13.5px}
+.criteria b{display:block;margin-bottom:4px}
+.criteria ul{margin:0;padding-left:18px}
+.hw-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+pre.prompt{background:#1e2b26;color:#eef5ef;padding:16px 18px;border-radius:12px;
+  overflow-x:auto;font:13.5px/1.55 Consolas,"Courier New",monospace;white-space:pre-wrap;margin:0 0 10px}
+.prompt-card{margin-bottom:18px}
+.prompt-card .row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.prompt-card h4{margin:0;font-size:16px}
+.rules{list-style:none;padding:0;margin:0}
+.rules li{padding:10px 0 10px 28px;position:relative;border-bottom:1px solid #eae2d1;font-size:14.5px}
+.rules li:before{content:"—";position:absolute;left:0;color:var(--accent2);font-weight:700}
+.do li{margin-bottom:9px}
+.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 26px}
+.tl{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.tl b{display:block;font-family:Georgia,serif;font-size:16px}
+.tl span{font-size:12.5px;color:var(--muted)}
+footer{padding:36px 0 56px;color:var(--muted);font-size:13px}
+footer p{margin:0 0 8px;max-width:820px}
+.day{max-width:620px}
+.day td:first-child{white-space:nowrap;font-variant-numeric:tabular-nums;color:#3f453f}
+.mini{font-size:13px;color:var(--muted)}
+@media (max-width:860px){.mentor{grid-template-columns:1fr}.course-head{grid-template-columns:44px 1fr}.course-hours{grid-column:1/-1;padding-left:0}}
+@media (max-width:620px){
+  .wrap{padding:0 16px} section{padding:38px 0}
+  table{font-size:13px} th,td{padding:8px 10px}
+  .hero{padding:38px 0 28px}
+}
+.hidden{display:none!important}
+.setup-grid{display:grid;grid-template-columns:0.9fr 1fr 2fr auto;gap:12px;align-items:end}
+.lesson{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(27,28,26,.06)}
+.lesson-top{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fffdf8,#f7f2e6)}
+.lesson-top h3{margin:2px 0 0;font-size:22px;line-height:1.2}
+.clock{font-family:Georgia,serif;font-size:30px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent);line-height:1}
+.stage-bar{display:flex;height:7px;background:#ece4d3}
+.stage-bar div{height:100%;background:#d8cdb6;border-right:1px solid #fff;transition:background .3s}
+.stage-bar div.done{background:#9dbfae}
+.stage-bar div.active{background:var(--accent)}
+.lesson-body{display:grid;grid-template-columns:280px 1fr}
+.ai-col{padding:20px;border-right:1px solid var(--line);background:#faf7ee}
+.ai-avatar{width:50px;height:50px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Georgia,serif;font-size:19px}
+.ai-name{font-weight:700;margin:10px 0 6px;font-size:14px}
+.ai-say{font-size:14px;color:#3c423d}
+.stage-col{padding:20px 24px}
+.stage-col h4{margin:0 0 10px;font-size:18px}
+.quiz-opt{display:block;width:100%;text-align:left;border:1px solid #d6ccb8;border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;background:#fff;font:inherit}
+.quiz-opt:hover{border-color:#a99e88}
+.quiz-opt.ok{border-color:#0b5d4b;background:#e9f2ec}
+.quiz-opt.bad{border-color:#a33;background:#f8eaea}
+.video-box{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#12211c;color:#eef5ef}
+.frame{position:absolute;inset:0;padding:24px 26px;display:grid;align-content:center;gap:10px;opacity:0;transition:opacity .5s}
+.frame.on{opacity:1}
+.frame b{font-family:Georgia,serif;font-size:13px;color:#8fb3a5;letter-spacing:.1em;text-transform:uppercase}
+.frame p{margin:0;font-size:17px;line-height:1.45}
+.video-ctl{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.check-task{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:9px 0;border-bottom:1px dashed #e6ddca;font-size:14.5px;cursor:pointer}
+.check-task input{margin-top:4px;width:17px;height:17px;accent-color:var(--accent)}
+textarea{width:100%;min-height:96px;padding:10px 12px;border:1px solid #cfc5b1;border-radius:10px;font:inherit;background:#fff;resize:vertical;color:var(--ink)}
+.verdict{border-radius:12px;padding:13px 16px;margin-top:12px;background:#eef4ef;border:1px solid #cfe0d5;font-size:14px}
+.verdict.bad{background:#f8eeee;border-color:#e6c9c9}
+.verdict b{font-family:Georgia,serif;font-size:17px}
+.lesson-controls{display:flex;gap:8px;flex-wrap:wrap;padding:14px 22px;border-top:1px solid var(--line);background:#fbf7ec}
+.journal{width:100%;border-collapse:collapse;font-size:14px}
+@media (max-width:860px){.lesson-body{grid-template-columns:1fr}.ai-col{border-right:none;border-bottom:1px solid var(--line)}.setup-grid{grid-template-columns:1fr 1fr}}
+.audio-item{display:grid;grid-template-columns:1fr 300px auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #efe8d8}
+.audio-item b{display:block;font-size:14px}
+.audio-item span{font-size:12.5px;color:var(--muted)}
+.audio-item audio{width:100%;height:34px}
+.audio-mod{margin:18px 0 6px;font-size:16px}
+.audio-intro{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.audio-intro audio{flex:1;min-width:240px;height:36px}
+@media (max-width:700px){.audio-item{grid-template-columns:1fr}.audio-item audio{width:100%}}
+@media print{
+  .nav,.mentor-controls,.btn,.hero .chips{display:none!important}
+  body{background:#fff}
+  section{padding:18px 0;break-inside:avoid}
+  .course,.card{break-inside:avoid;box-shadow:none}
+  a{color:inherit;text-decoration:none}
+  pre.prompt{border:1px solid #ccc;background:#f7f7f7;color:#111}
+}
+</style>
+</head>
+<body id="top">
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">09.02.11 · квалификация «программист» · ускоренный курс</p>
+    <h1>Разработка и управление программным обеспечением</h1>
+    <p class="lead">Только профессия, без общеобразовательных предметов: 12 недель, 4 модуля, пары по 40 минут. ИИ ведёт урок, даёт практику и домашнее задание, а на следующем занятии проверяет работу и ставит оценку.</p>
+    <div class="chips">
+      <span class="chip">Квалификация: программист</span>
+      <span class="chip">Ускоренный курс — 12 недель</span>
+      <span class="chip">Без общеобразовательных предметов</span>
+      <span class="chip">Пара — 40 минут</span>
+      <span class="chip">Проверка ДЗ на следующем уроке</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="statHours">—</b><span>учебных часов по 40 минут</span></div>
+      <div class="stat"><b>4</b><span>модуля по 3 недели</span></div>
+      <div class="stat"><b>2</b><span>практики: стажировка и защита проекта</span></div>
+      <div class="stat"><b>40</b><span>минут — одна пара</span></div>
+      <div class="stat"><b id="statTasks">—</b><span>заданий в банке домашних работ</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <ul>
+    <li><a href="#class">Аудитория</a></li>
+    <li><a href="#audio">Аудиоуроки</a></li>
+    <li><a href="#how">Как устроен план</a></li>
+    <li><a href="#now">Где ты сейчас</a></li>
+    <li><a href="#plan">Учебный план</a></li>
+    <li><a href="#day">День и неделя</a></li>
+    <li><a href="#ai">Задачник</a></li>
+    <li><a href="#prompts">Промпты и правила</a></li>
+    <li><a href="#after">Что уметь и куда идти</a></li>
+  </ul>
+</nav>
+
+<main>
+<section id="class">
+  <div class="wrap">
+    <h2>Аудитория: пара на 40 минут</h2>
+    <p class="sub">Выбери предмет и урок — ИИ проведёт пару: объяснит тему, покажет видеофрагмент, даст практику и задаст домашнее задание. На следующем уроке он же проверит работу и поставит оценку.</p>
+    <div class="card">
+      <div class="setup-grid">
+        <label class="field"><span>Модуль</span><select id="lCourse"><option value="1">Модуль 1 — База</option><option value="2">Модуль 2 — Разработка</option><option value="3">Модуль 3 — Системы</option><option value="4">Модуль 4 — ИИ и финал</option></select></label>
+        <label class="field"><span>Предмет</span><select id="lSubject"></select></label>
+        <label class="field"><span>Урок</span><select id="lLesson"></select></label>
+        <button class="btn primary" id="lStart">Начать пару</button>
+      </div>
+      <p class="mini" id="lessonPreview" style="margin:12px 0 0"></p>
+    </div>
+
+    <div id="lesson" class="lesson hidden">
+      <div class="lesson-top">
+        <div><div class="mini" id="lessonKicker"></div><h3 id="lessonTitle"></h3></div>
+        <div style="text-align:right"><div class="clock" id="clock">40:00</div><div class="mini" id="stageName">Организация</div></div>
+      </div>
+      <div class="stage-bar" id="stageBar"></div>
+      <div class="lesson-body">
+        <aside class="ai-col"><div class="ai-avatar">ИИ</div><div class="ai-name">Наставник</div><div class="ai-say" id="aiSay"></div></aside>
+        <div class="stage-col" id="stageCol"></div>
+      </div>
+      <div class="lesson-controls">
+        <button class="btn primary" id="lNext">Дальше</button>
+        <button class="btn" id="lPause">Пауза</button>
+        <button class="btn small" id="lSpeed">1×</button>
+        <button class="btn small" id="lExit">Выйти</button>
+        <span class="mini" id="lHint" style="align-self:center">Таймер идёт сам: 40 минут на пару.</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <h3>Журнал по предмету</h3>
+      <div id="journalBox"></div>
+    </div>
+  </div>
+</section>
+
+<section id="audio">
+  <div class="wrap">
+    <h2>Аудиоуроки</h2>
+    <p class="sub">Слушай по дороге: 48 коротких уроков голосом — теория, практика и домашнее задание. Файлы можно скачать и слушать без интернета.</p>
+    <div class="card">
+      <div class="audio-intro"><b>Введение в курс</b><audio controls preload="none" src="audio-09.02.11/intro.mp3"></audio></div>
+      <div id="audioList"></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>Как устроен ускоренный курс</h2>
+    <p class="sub">Ни одного общеобразовательного предмета: только то, что нужно программисту на работе. Четыре модуля по 3 недели, 32 урока в неделю по 40 минут, в конце — стажировка и защита проекта.</p>
+    <div class="grid g4">
+      <div class="card">
+        <span class="tagline">Модуль 1 · 3 недели</span>
+        <h3>База программиста</h3>
+        <p>Python, алгоритмы и структуры данных, ООП и чистый код, базы данных и SQL, Git, инструменты разработчика, дискретная математика, архитектура компьютера и ОС, технический английский.</p>
+      </div>
+      <div class="card">
+        <span class="tagline">Модуль 2 · 3 недели</span>
+        <h3>Разработка и API</h3>
+        <p>Web: HTML, CSS, JavaScript. Серверная разработка и REST API, тестирование и отладка, проектирование БД, Linux, сети и протоколы, командная работа, практикум по алгоритмам.</p>
+      </div>
+      <div class="card">
+        <span class="tagline">Модуль 3 · 3 недели</span>
+        <h3>Системы и качество</h3>
+        <p>Архитектура ПО и паттерны, DevOps: Docker, CI/CD, облако. Автоматизация тестирования, безопасность приложений, оптимизация БД, управление ИТ-проектами, командный проект.</p>
+      </div>
+      <div class="card">
+        <span class="tagline">Модуль 4 · 3 недели</span>
+        <h3>ИИ и выход на рынок</h3>
+        <p>ИИ-инструменты разработчика, промпт-инжиниринг, ИИ-агенты, мобильная разработка, облака и масштабирование, портфолио и собеседование, итоговый проект.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="now">
+  <div class="wrap">
+    <h2>Где ты сейчас</h2>
+    <p class="sub">Курс рассчитан на 12 недель с 1 сентября. Поставь свою дату — увидишь модуль, неделю и предметы, которые идут сейчас.</p>
+    <div class="card status">
+      <div class="status-grid">
+        <div><span class="label">Дата начала обучения</span><input type="date" id="startDate" value="2026-09-01"></div>
+        <div><span class="label">Сейчас</span><b id="nowCourse">Модуль 1</b><span class="mini" id="nowSem">1 неделя курса</span></div>
+        <div><span class="label">До конца модуля</span><b id="nowLeft">3 недели</b><span class="mini">без каникул и праздников</span></div>
+      </div>
+      <div class="chips" id="nowSubjects"></div>
+    </div>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="wrap">
+    <h2>Учебный план по модулям</h2>
+    <p class="sub">Часы — учебные, по 40 минут. «Практика» — лабораторные, практические и самостоятельные работы в аудитории. Форма контроля — то, чем заканчивается дисциплина.</p>
+    <div id="planRoot"></div>
+    <h3 style="margin-top:34px">Итого по программе</h3>
+    <div class="table-wrap card" style="padding:0">
+      <table id="summaryTable"></table>
+    </div>
+  </div>
+</section>
+
+<section id="day">
+  <div class="wrap">
+    <h2>Типовой день и неделя</h2>
+    <p class="sub">32 урока в неделю — это 6–7 уроков в день. Пары по 80 минут дают время на практику, короткие уроки не дают «пересидеть».</p>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Расписание дня, модуль 1</h3>
+        <table class="day" style="margin-top:10px">
+          <tbody>
+            <tr><td>08:30–09:10</td><td>Основы программирования на Python</td></tr>
+            <tr><td>09:20–10:00</td><td>Основы программирования на Python</td></tr>
+            <tr><td>10:10–10:50</td><td>Алгоритмы и структуры данных</td></tr>
+            <tr><td>11:10–11:50</td><td>Алгоритмы и структуры данных</td></tr>
+            <tr><td>12:00–12:40</td><td>Базы данных и SQL</td></tr>
+            <tr><td>12:50–13:30</td><td>Git и командная работа</td></tr>
+            <tr><td>13:40–14:20</td><td>Технический английский</td></tr>
+          </tbody>
+        </table>
+        <p class="mini" style="margin-top:10px">Перемены: 10 минут, после второй пары — 20 минут. Начало и конец дня зависят от техникума.</p>
+      </div>
+      <div class="card">
+        <h3>Правила 40 минут</h3>
+        <ul class="rules">
+          <li>40 минут — один урок. Две пары подряд по одному предмету — 80 минут: успеваешь разобрать теорию и сразу написать код.</li>
+          <li>Домашняя работа — ориентир 1,5–2 часа в день. Это не норма закона, а рабочая привычка: лучше 90 минут каждый день, чем 5 часов в воскресенье.</li>
+          <li>Раз в неделю — «чистый день» без нового материала: только практика и разбор ошибок.</li>
+          <li>Каждый модуль заканчивается зачётом или экзаменом. Долги не копятся: сдал тему — закрыл хвост.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ai">
+  <div class="wrap">
+    <h2>Задачник: ДЗ без пары</h2>
+    <p class="sub">Если нужна дополнительная работа по предмету — собери её здесь. Задания берутся из того же банка, что и на паре, прогресс сохраняется.</p>
+    <div class="mentor">
+      <div class="card mentor-controls">
+        <label class="field"><span>Модуль</span><select id="mCourse"><option value="1">Модуль 1 — База</option><option value="2">Модуль 2 — Разработка</option><option value="3">Модуль 3 — Системы</option><option value="4">Модуль 4 — ИИ</option></select></label>
+        <label class="field"><span>Предмет</span><select id="mSubject"></select></label>
+        <label class="field"><span>Уровень</span><select id="mLevel">
+          <option value="1">Базовый — вспомнить и закрепить</option>
+          <option value="2" selected>Средний — применить</option>
+          <option value="3">Продвинутый — проект</option>
+        </select></label>
+        <label class="field"><span>Сколько заданий</span><select id="mCount"><option>2</option><option selected>3</option><option>4</option></select></label>
+        <label class="field"><span>Срок</span><select id="mDue"><option value="1">на завтра</option><option value="3" selected>через 3 дня</option><option value="7">через неделю</option></select></label>
+        <button class="btn primary" id="mGenerate" style="width:100%">Задать домашнее задание</button>
+        <button class="btn" id="mWeek" style="width:100%;margin-top:8px">Собрать ДЗ на неделю</button>
+        <p class="hint-note">Задания сохраняются в браузере: можно закрыть страницу и вернуться к ним позже.</p>
+      </div>
+      <div class="card hw-panel" id="hwBox"></div>
+    </div>
+  </div>
+</section>
+
+<section id="prompts">
+  <div class="wrap">
+    <h2>ИИ в учёбе и в профессии</h2>
+    <p class="sub">ИИ уже пишет рутинный код, тесты и документацию. Ценность программиста смещается к постановке задачи, архитектуре, проверке и ответственности за результат. Поэтому в плане есть отдельные дисциплины: основы ИИ, промпт-инжиниринг, генеративный ИИ, ИИ-агенты.</p>
+    <div class="grid g2" style="margin-bottom:30px">
+      <div class="card">
+        <h3>Что ИИ берёт на себя</h3>
+        <ul class="rules">
+          <li>Шаблонный код, тесты, миграции, документацию.</li>
+          <li>Разбор ошибок и объяснение незнакомой технологии.</li>
+          <li>Тренировки: вопросы, задачи, проверка по критериям.</li>
+          <li>Рутину в анализе данных и оформлении отчётов.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Что остаётся человеку</h3>
+        <ul class="rules">
+          <li>Понять задачу и договориться о критериях.</li>
+          <li>Выбрать архитектуру и оценить риски.</li>
+          <li>Проверить код, данные и факты.</li>
+          <li>Ответить за результат перед заказчиком и командой.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Готовые промпты</h3>
+    <p class="sub" style="margin-bottom:18px">Скопируй, подставь свою тему и вставь в MultiTool или другой ИИ-помощник.</p>
+
+    <div class="prompt-card">
+      <div class="row"><h4>Объяснить тему</h4><button class="btn small copy" data-k="p1">Копировать</button></div>
+      <pre class="prompt" id="p1">Ты — преподаватель ускоренного курса по профессии «Программист» (09.02.11). Объясни мне тему «___» так, как будто я взрослый новичок без общеобразовательной программы: 3 главные идеи, один пример, две типичные ошибки. В конце задай 3 вопроса на проверку. Готовых ответов не давай.</pre>
+    </div>
+    <div class="prompt-card">
+      <div class="row"><h4>Задать домашнее задание</h4><button class="btn small copy" data-k="p2">Копировать</button></div>
+      <pre class="prompt" id="p2">Ты — преподаватель предмета «___» в техникуме, группа после 9 класса по профессии «Разработка и управление программным обеспечением». Составь домашнее задание на неделю: 4 задания по 30–40 минут, от простого к сложному, с критериями приёмки и подсказками, но без готовых ответов. Формат — нумерованный список.</pre>
+    </div>
+    <div class="prompt-card">
+      <div class="row"><h4>Проверить работу</h4><button class="btn small copy" data-k="p3">Копировать</button></div>
+      <pre class="prompt" id="p3">Проверь мою работу по критериям: ___. Не переписывай её целиком. Дай 3 сильные стороны, 3 ошибки с объяснением и одно задание на отработку слабого места. Вот работа: ___</pre>
+    </div>
+    <div class="prompt-card">
+      <div class="row"><h4>Ревью кода</h4><button class="btn small copy" data-k="p4">Копировать</button></div>
+      <pre class="prompt" id="p4">Выступи в роли ревьюера. Проверь мой код: ошибки, уязвимости, нарушения SOLID. Объясняй каждое замечание и предлагай, как исправить, но не вставляй свой код целиком. Код: ___</pre>
+    </div>
+
+    <h3 style="margin-top:30px">Пять правил работы с ИИ</h3>
+    <ul class="rules">
+      <li>ИИ — тренажёр, а не автор твоей работы. Сдаёшь то, что понимаешь и можешь объяснить.</li>
+      <li>Проверяй факты, код и числа: модель может уверенно ошибаться.</li>
+      <li>Не вставляй в чат личные данные, пароли и чужие материалы.</li>
+      <li>Указывай, где использовал ИИ, если этого требует преподаватель.</li>
+      <li>Спроси ИИ «почему так?» — это самый быстрый способ разобраться.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="after">
+  <div class="wrap">
+    <h2>Что ты будешь уметь и куда идти</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Компетенции выпускника</h3>
+        <ul class="rules">
+          <li>Писать и поддерживать код на Python, C# и JavaScript.</li>
+          <li>Проектировать базы данных и писать SQL-запросы.</li>
+          <li>Делать web-приложения, API и адаптивную вёрстку.</li>
+          <li>Тестировать, отлаживать и ревьюить чужой код.</li>
+          <li>Работать с Git, Docker, CI/CD и облаком.</li>
+          <li>Применять ИИ: генерация кода, промпты, агенты, автоматизация.</li>
+          <li>Оценивать сроки и управлять небольшим проектом.</li>
+          <li>Читать документацию и общаться с заказчиком на английском.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>После выпуска</h3>
+        <ul class="rules">
+          <li>Junior-разработчик: Python, JavaScript, C#, мобильная разработка.</li>
+          <li>Тестировщик (QA) и автоматизатор тестов.</li>
+          <li>Администратор баз данных, DevOps-стажёр.</li>
+          <li>Разработчик ИИ-функций, инженер промптов, ИИ-ассистент команды.</li>
+          <li>Продолжение обучения в вузе по ИТ-направлению.</li>
+        </ul>
+        <p class="mini" style="margin-top:12px">Зарплата зависит от региона, стека и портфолио — поэтому в плане четыре проекта в портфолио, а не только оценки.</p>
+      </div>
+    </div>
+    <h3 style="margin-top:30px">Чек-лист первого месяца</h3>
+    <div class="card">
+      <div class="grid g2">
+        <ul class="rules">
+          <li>Поставить Python и VS Code, создать первую папку проектов.</li>
+          <li>Завести аккаунт GitHub и залить первый файл.</li>
+          <li>Выучить 30 IT-слов на английском.</li>
+        </ul>
+        <ul class="rules">
+          <li>Сделать конспект-схему по SQL: SELECT, JOIN, GROUP BY.</li>
+          <li>Написать первую программу: калькулятор или «угадай число».</li>
+          <li>Завести привычку: 40 минут практики каждый день.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Важно.</b> Это компактная профессиональная программа для ускоренного обучения: только дисциплины профессии, без общеобразовательного цикла. Официальный учебный план по специальности 09.02.11 утверждает колледж по ФГОС — перечень дисциплин, объём часов и формы контроля могут отличаться.</p>
+    <p>Файл работает офлайн: открой его в браузере, нажми «Печать» — и получится PDF. Версия: ноябрь 2026.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var COURSES = [
+    {n:1, title:"База и первые программы", note:"Общеобразовательные предметы плюс первые шаги в профессии. К концу года пишешь простые программы на Python и понимаешь, как устроен компьютер.", sems:[
+      {n:1, weeks:17, subjects:[
+        ["Русский язык",34,2,10,"зачёт"],
+        ["Литература",34,2,6,"зачёт"],
+        ["Английский язык",51,3,26,"зачёт"],
+        ["Математика",85,5,34,"экзамен"],
+        ["Информатика",51,3,34,"зачёт"],
+        ["История",34,2,10,"зачёт"],
+        ["Обществознание",34,2,12,"зачёт"],
+        ["Физика",34,2,12,"зачёт"],
+        ["Химия",17,1,6,"зачёт"],
+        ["Биология",17,1,4,"зачёт"],
+        ["География",17,1,4,"зачёт"],
+        ["Физическая культура",34,2,30,"зачёт"],
+        ["ОБЖ",17,1,8,"зачёт"],
+        ["Введение в профессию",17,1,10,"проект"],
+        ["Основы программирования",68,4,44,"диф. зачёт"],
+        ["Архитектура ЭВМ и цифровая логика",34,2,16,"зачёт"],
+        ["Компьютерная графика и черчение",34,2,22,"зачёт"]
+      ]},
+      {n:2, weeks:17, subjects:[
+        ["Русский язык",34,2,10,"экзамен"],
+        ["Литература",51,3,10,"зачёт"],
+        ["Английский язык",51,3,26,"экзамен"],
+        ["Математика",85,5,40,"экзамен"],
+        ["Информатика",51,3,34,"экзамен"],
+        ["История",34,2,10,"зачёт"],
+        ["Обществознание",34,2,12,"зачёт"],
+        ["Физика",51,3,18,"зачёт"],
+        ["Химия",34,2,10,"зачёт"],
+        ["Биология",17,1,4,"зачёт"],
+        ["Астрономия",17,1,4,"зачёт"],
+        ["Физическая культура",34,2,30,"зачёт"],
+        ["ОБЖ",17,1,8,"зачёт"],
+        ["Индивидуальный проект",17,1,12,"защита"],
+        ["Основы программирования",68,4,48,"экзамен"],
+        ["Архитектура ЭВМ",17,1,8,"зачёт"]
+      ]}
+    ], extras:[]},
+    {n:2, title:"Ремесло: код, данные, сети", note:"Общепрофессиональные дисциплины. Учишься писать код осознанно, проектировать базы данных, поднимать web и тестировать чужое.", sems:[
+      {n:3, weeks:17, subjects:[
+        ["Математика: дискретная математика и теория вероятностей",68,4,34,"экзамен"],
+        ["Английский язык (технический)",51,3,34,"зачёт"],
+        ["Основы алгоритмизации и программирования (Python)",85,5,60,"экзамен"],
+        ["Объектно-ориентированное программирование",68,4,48,"диф. зачёт"],
+        ["Базы данных и SQL",68,4,48,"диф. зачёт"],
+        ["Операционные системы",51,3,30,"зачёт"],
+        ["Компьютерные сети",51,3,30,"зачёт"],
+        ["Web-технологии: HTML и CSS",68,4,50,"диф. зачёт"],
+        ["Экономика и правовые основы",34,2,14,"зачёт"],
+        ["Безопасность жизнедеятельности",34,2,16,"зачёт"],
+        ["Физическая культура",34,2,30,"зачёт"]
+      ]},
+      {n:4, weeks:17, subjects:[
+        ["Математика",51,3,24,"зачёт"],
+        ["Английский язык",51,3,34,"экзамен"],
+        ["Объектно-ориентированное программирование",68,4,48,"экзамен"],
+        ["Базы данных и SQL",68,4,48,"экзамен"],
+        ["Операционные системы",51,3,30,"зачёт"],
+        ["Компьютерные сети",51,3,30,"экзамен"],
+        ["Web-технологии: JavaScript",68,4,50,"диф. зачёт"],
+        ["Тестирование ПО",34,2,24,"зачёт"],
+        ["Основы искусственного интеллекта",51,3,30,"зачёт"],
+        ["Git и командная работа",34,2,26,"зачёт"],
+        ["Экономика",34,2,14,"зачёт"],
+        ["Безопасность жизнедеятельности",17,1,8,"зачёт"],
+        ["Физическая культура",34,2,30,"зачёт"]
+      ]}
+    ], extras:[["Учебная практика (ПМ.01)",72,"2 недели"]]},
+    {n:3, title:"Профессия: модули, интеграция, управление", note:"Профессиональные модули ПМ.01–ПМ.05 и ИИ-дисциплины. Здесь появляются командные проекты, код-ревью и первая производственная практика.", sems:[
+      {n:5, weeks:17, subjects:[
+        ["ПМ.01 Разработка модулей ПО — МДК.01.01",102,6,70,"экзамен"],
+        ["МДК.01.02 Тестирование и отладка модулей",51,3,36,"диф. зачёт"],
+        ["ПМ.02 Интеграция программных модулей — МДК.02.01",85,5,60,"экзамен"],
+        ["ПМ.03 Ревьюирование программных продуктов — МДК.03.01",51,3,34,"зачёт"],
+        ["Проектирование интерфейсов (UX/UI)",51,3,34,"диф. зачёт"],
+        ["Искусственный интеллект и машинное обучение: введение",68,4,40,"диф. зачёт"],
+        ["Промпт-инжиниринг и ИИ-инструменты разработчика",51,3,36,"зачёт"],
+        ["Английский язык (профессиональный)",51,3,34,"зачёт"],
+        ["Управление ИТ-проектами (Agile, Scrum)",68,4,40,"диф. зачёт"],
+        ["Физическая культура",34,2,30,"зачёт"]
+      ]},
+      {n:6, weeks:17, subjects:[
+        ["МДК.01.01 — курсовой проект",68,4,50,"курсовая"],
+        ["МДК.02.01 Интеграция и сборка",85,5,60,"диф. зачёт"],
+        ["ПМ.04 Сопровождение и управление ПО — МДК.04.01",85,5,60,"экзамен"],
+        ["ПМ.05 Проектирование и разработка ИС — МДК.05.01",85,5,60,"экзамен"],
+        ["Генеративный ИИ и автоматизация разработки",68,4,50,"диф. зачёт"],
+        ["DevOps и CI/CD",51,3,40,"зачёт"],
+        ["Управление командой и качеством",51,3,34,"зачёт"],
+        ["Английский язык",51,3,34,"экзамен"],
+        ["Экономика ИТ-проектов",34,2,16,"зачёт"],
+        ["Физическая культура",34,2,30,"зачёт"]
+      ]}
+    ], extras:[["Учебная практика (ПМ.02–03)",108,"3 недели"],["Производственная практика (ПМ.04–05)",144,"4 недели"]]},
+    {n:4, title:"Самостоятельность и диплом", note:"ИИ-проект, архитектура, облака, безопасность и мобильная разработка. Финал — производственная практика, демонстрационный экзамен и защита диплома.", sems:[
+      {n:7, weeks:17, subjects:[
+        ["ИИ-проект: разработка ИИ-функций в ПО",102,6,80,"курсовая"],
+        ["Архитектура ПО и рефакторинг",68,4,50,"экзамен"],
+        ["ИИ-агенты и автоматизация процессов",68,4,50,"диф. зачёт"],
+        ["Облачные технологии и контейнеры",51,3,40,"зачёт"],
+        ["Кибербезопасность приложений",51,3,34,"зачёт"],
+        ["Мобильная разработка",68,4,50,"диф. зачёт"],
+        ["Управление ИТ-командой",51,3,34,"зачёт"],
+        ["Курсовое проектирование",34,2,30,"курсовая"],
+        ["Английский язык",34,2,24,"зачёт"],
+        ["Физическая культура",34,2,30,"зачёт"],
+        ["Подготовка к демонстрационному экзамену",51,3,45,"тренировка"]
+      ]},
+      {n:8, weeks:17, subjects:[
+        ["Производственная практика (по профилю)",288,"8 недель","—","отчёт"],
+        ["Преддипломная практика",108,"3 недели","—","отзыв"],
+        ["Подготовка к демонстрационному экзамену",36,"1 неделя",36,"—"],
+        ["Демонстрационный экзамен",36,"—",36,"оценка"],
+        ["Подготовка и защита дипломной работы",72,"2 недели",60,"защита"],
+        ["Консультации и резерв",30,"—","—","—"]
+      ]}
+    ], extras:[]}
+  ];
+
+  COURSES = [
+    {n:1, title:"База программиста", note:"Python, алгоритмы, ООП, базы данных, Git и инструменты. Три недели — и ты пишешь работающие программы, а не «проходишь теорию».", sems:[
+      {n:1, weeks:3, subjects:[
+        ["Основы программирования на Python",24,8,18,"экзамен"],
+        ["Алгоритмы и структуры данных",12,4,9,"диф. зачёт"],
+        ["ООП и чистый код",12,4,9,"диф. зачёт"],
+        ["Базы данных и SQL",12,4,8,"экзамен"],
+        ["Git и командная работа",9,3,7,"зачёт"],
+        ["Инструменты разработчика: IDE, терминал, отладчик",6,2,5,"зачёт"],
+        ["Дискретная математика и логика",6,2,2,"зачёт"],
+        ["Архитектура компьютера и операционные системы",6,2,2,"зачёт"],
+        ["Технический английский: документация",9,3,6,"зачёт"]
+      ]}
+    ], extras:[]},
+    {n:2, title:"Разработка и API", note:"От страницы до сервера: вёрстка, JavaScript, REST API, тесты, Linux и сети. К концу модуля у тебя есть web-приложение с бэкендом.", sems:[
+      {n:2, weeks:3, subjects:[
+        ["Web-разработка: HTML, CSS, JavaScript",18,6,14,"экзамен"],
+        ["Серверная разработка и API",15,5,11,"экзамен"],
+        ["Тестирование и отладка",12,4,9,"диф. зачёт"],
+        ["Проектирование баз данных",9,3,6,"зачёт"],
+        ["Linux и командная строка",9,3,7,"зачёт"],
+        ["Сети и протоколы",9,3,5,"зачёт"],
+        ["Технический английский",6,2,4,"зачёт"],
+        ["Командная работа и Git-flow",6,2,5,"зачёт"],
+        ["Практикум по алгоритмам",12,4,10,"диф. зачёт"]
+      ]}
+    ], extras:[["Стажировка в команде",32,"1 неделя"]]},
+    {n:3, title:"Системы и качество", note:"Архитектура, DevOps, безопасность и управление. Учишься делать не «код, который работает», а систему, которую можно сопровождать.", sems:[
+      {n:3, weeks:3, subjects:[
+        ["Архитектура ПО и паттерны",15,5,10,"экзамен"],
+        ["DevOps: Docker, CI/CD, облако",15,5,11,"экзамен"],
+        ["Автоматизация тестирования",12,4,9,"диф. зачёт"],
+        ["Безопасность приложений",12,4,7,"зачёт"],
+        ["Проектирование и оптимизация БД",12,4,9,"диф. зачёт"],
+        ["Управление ИТ-проектами",9,3,5,"зачёт"],
+        ["Технический английский",6,2,4,"зачёт"],
+        ["Командный проект",15,5,13,"проект"]
+      ]}
+    ], extras:[]},
+    {n:4, title:"ИИ и выход на рынок", note:"ИИ-инструменты, промпты, агенты, мобильная разработка и облака. Финал — портфолио, итоговый проект и защита.", sems:[
+      {n:4, weeks:3, subjects:[
+        ["ИИ-инструменты разработчика",15,5,12,"диф. зачёт"],
+        ["Промпт-инжиниринг",12,4,9,"зачёт"],
+        ["ИИ-агенты и автоматизация",12,4,9,"диф. зачёт"],
+        ["Мобильная разработка",12,4,9,"диф. зачёт"],
+        ["Облака и масштабирование",9,3,6,"зачёт"],
+        ["Портфолио и подготовка к собеседованию",9,3,6,"зачёт"],
+        ["Итоговый проект",21,7,18,"защита"],
+        ["Технический английский",6,2,4,"зачёт"]
+      ]}
+    ], extras:[["Защита итогового проекта",8,"1 неделя"]]}
+  ];
+
+  var BANK = {
+    rus:{name:"Русский язык",criteria:["Работа сдана в срок и оформлена аккуратно","Есть объяснение, а не только ответ","Ошибки исправлены после проверки"],tasks:[
+      ["Выписать 10 предложений с причастным оборотом из §14, расставить запятые и объяснить графически.",25,1,"Причастный оборот обособляется, если стоит после определяемого слова."],
+      ["Повторить словарные слова блока 3 и составить с ними 8 предложений о профессии.",20,1,"Проверь безударные гласные по словарю."],
+      ["Написать сочинение-рассуждение 150–180 слов: «Зачем программисту грамотная речь».",45,2,"Тезис — два аргумента — пример — вывод."],
+      ["Найти в своём тексте 10 речевых ошибок, исправить и объяснить каждую.",30,3,"Ищи повторы, лишние слова и неверный падеж."]
+    ]},
+    lit:{name:"Литература",criteria:["Есть цитаты или ссылки на текст","Мысль сформулирована своими словами","Объём выдержан"],tasks:[
+      ["Прочитать главу и выписать 5 цитат, которые характеризуют героя.",30,1,"Цитата — точная, в кавычках, с указанием главы."],
+      ["Составить план анализа эпизода: 5 пунктов и главный тезис.",25,1,"План должен показывать развитие конфликта."],
+      ["Написать отзыв о прочитанном, 120–150 слов, с двумя аргументами.",40,2,"Не пересказ, а оценка и аргументы."],
+      ["Сравнить двух героев по трём критериям, оформить таблицей и сделать вывод.",35,3,"Вывод — одно-два предложения, без воды."]
+    ]},
+    eng:{name:"Английский язык",criteria:["Использовано не меньше 5 новых слов","Есть письменный текст или запись","Ошибки разобраны"],tasks:[
+      ["Выучить 20 IT-слов и составить с ними 10 предложений.",30,1,"Слова учи с примерами, а не списком."],
+      ["Прочитать текст “How the Internet Works”, выписать 10 незнакомых слов с переводом.",35,1,"Выписывай слово вместе с фразой из текста."],
+      ["Написать письмо-отклик на вакансию junior developer, 120 слов.",45,2,"Структура: кто ты — что умеешь — почему ты."],
+      ["Записать аудио 2 минуты: рассказ о своём проекте, использовать 5 терминов.",30,3,"Репетируй по плану, не читай с листа."]
+    ]},
+    math:{name:"Математика",criteria:["Записано решение по шагам","Есть проверка ответа","Понятно, откуда взялась формула"],tasks:[
+      ["Решить 8 примеров на производную (карточка А) и проверить ответы.",40,1,"Сверяйся с таблицей производных."],
+      ["Решить 3 задачи на наибольшее и наименьшее значение функции на отрезке.",35,1,"Алгоритм: производная — критические точки — значения на концах."],
+      ["Исследовать функцию y = x³ − 3x и построить график по алгоритму.",40,2,"Не забудь про область определения."],
+      ["Решить 5 задач на вероятность и объяснить, почему выбрал формулу.",30,3,"Проверь, зависимы ли события."]
+    ]},
+    inf:{name:"Информатика",criteria:["Все шаги решения видны","Есть проверка","Работа сдана в срок"],tasks:[
+      ["Перевести 10 чисел между двоичной, восьмеричной, десятичной и шестнадцатеричной системами.",25,1,"Переводи через десятичную, если так проще."],
+      ["Составить таблицу истинности для выражения и упростить его.",30,1,"Сначала расставь порядок операций."],
+      ["Посчитать объём файла и время передачи — 6 задач.",25,2,"1 байт = 8 бит, 1 КБ = 1024 байта."],
+      ["Нарисовать блок-схему сортировки и проверить её на массиве из 6 чисел.",30,3,"Проверь крайние случаи: пустой массив и один элемент."]
+    ]},
+    phys:{name:"Физика",criteria:["Есть дано, формула, решение","Указаны единицы измерения","Сделан вывод"],tasks:[
+      ["Решить 5 задач на второй закон Ньютона.",35,1,"Нарисуй силы на чертеже до формул."],
+      ["Решить 6 задач на закон Ома для участка цепи.",30,1,"Проверь, где последовательное, а где параллельное соединение."],
+      ["Оформить лабораторную: таблица измерений, расчёт сопротивления, вывод.",40,2,"Погрешность считай по формуле из методички."],
+      ["Объяснить в 10 предложениях, как работает SSD, и сравнить с HDD по трём параметрам.",25,3,"Сравни скорость, надёжность и цену за гигабайт."]
+    ]},
+    hist:{name:"История / Обществознание",criteria:["Есть даты и факты","Мысль аргументирована","Оформлено аккуратно"],tasks:[
+      ["Составить хронологическую таблицу из 5 событий и выучить даты.",25,1,"Проверь даты по учебнику, не по памяти."],
+      ["Выписать 10 терминов по теме и объяснить их своими словами.",20,1,"Объяснение — одно предложение, без копирования."],
+      ["Разобрать 3 ситуации с точки зрения трудового права.",30,2,"Ссылайся на статью, а не на «так принято»."],
+      ["Написать эссе 120 слов: «Технологии меняют общество: плюсы и риски».",40,3,"Два плюса, два риска, собственный вывод."]
+    ]},
+    py:{name:"Основы программирования",criteria:["Код запускается без ошибок","Есть 2 теста или примера запуска","Понятно, что делает каждая функция"],tasks:[
+      ["Написать 5 функций: сумма, максимум, чётность, факториал, палиндром.",40,1,"Сначала проверь на простых числах."],
+      ["Решить 4 задачи на строки: сначала без срезов, потом со срезами.",35,1,"Сравни два решения по длине кода."],
+      ["Сделать калькулятор с обработкой ошибок ввода и меню.",45,2,"Деление на ноль — отдельный случай."],
+      ["Разобрать чужой код на 20 строк: найти 3 ошибки и переписать.",30,3,"Проверь границы циклов и типы данных."]
+    ]},
+    algo:{name:"Алгоритмы и структуры данных",criteria:["Есть оценка сложности","Код работает на тестах","Решение объяснено"],tasks:[
+      ["Реализовать бинарный поиск и проверить на 5 массивах.",35,1,"Массив должен быть отсортирован."],
+      ["Посчитать сложность 5 функций, записать O(...) и объяснить.",30,1,"Считай вложенность циклов."],
+      ["Решить 3 задачи на рекурсию: факториал, Фибоначчи, ханойская башня.",45,2,"Не забудь базовый случай."],
+      ["Реализовать сортировку слиянием и сравнить с пузырьком по времени.",50,3,"Замерь на 1000 и 10000 элементов."]
+    ]},
+    oop:{name:"ООП и разработка модулей",criteria:["Классы разделены по ответственности","Есть тесты","Код читается без пояснений"],tasks:[
+      ["Спроектировать класс BankAccount с 5 методами и валидацией.",40,1,"Негативные сценарии — тоже часть класса."],
+      ["Переписать 3 класса с наследованием на композицию и объяснить выбор.",45,2,"Наследование — это «является», композиция — «содержит»."],
+      ["Реализовать абстрактный класс для трёх фигур и посчитать площади.",40,2,"Метод площади должен быть общим интерфейсом."],
+      ["Написать 10 unit-тестов на свой класс.",45,3,"Проверь границы и неверный ввод."]
+    ]},
+    db:{name:"Базы данных",criteria:["Запросы выполняются","Есть схема или ER-модель","Понятно, что вернёт каждый запрос"],tasks:[
+      ["Написать 10 SQL-запросов к учебной базе: SELECT, WHERE, ORDER BY.",35,1,"Сначала проверь имена таблиц."],
+      ["Спроектировать ER-модель интернет-магазина: 5 таблиц и связи.",40,2,"Где нужен внешний ключ, а где отдельная таблица?"],
+      ["Сделать 5 JOIN-запросов и объяснить, что вернёт каждый.",35,2,"LEFT JOIN и INNER JOIN дают разный результат."],
+      ["Создать таблицы с внешними ключами и ограничениями CHECK.",35,3,"Проверь каскадное удаление."]
+    ]},
+    web:{name:"Web-разработка",criteria:["Страница открывается в браузере","Есть адаптив 320–1440","Код в репозитории"],tasks:[
+      ["Сверстать страницу-визитку на HTML и CSS.",60,1,"Начни с семантических тегов."],
+      ["Сделать форму с валидацией на JavaScript.",45,2,"Проверь пустые поля и неверный email."],
+      ["Реализовать список задач (to-do) с сохранением в localStorage.",50,2,"Проверь перезагрузку страницы."],
+      ["Сделать запрос к API и вывести данные в карточки.",50,3,"Обработай ошибку сети, а не только успех."]
+    ]},
+    qa:{name:"Тестирование ПО",criteria:["Тест-кейсы воспроизводимы","Есть ожидаемый и фактический результат","Баг-репорты понятны разработчику"],tasks:[
+      ["Написать 10 тест-кейсов для формы регистрации.",40,1,"Покрой пустые поля, длины и спецсимволы."],
+      ["Составить чек-лист проверки мобильного приложения из 15 пунктов.",30,1,"Начни с установки и первого запуска."],
+      ["Найти 5 багов в учебном коде и оформить баг-репорты.",45,2,"Шаги воспроизведения — по одному действию."],
+      ["Написать 5 автотестов на pytest для готовой функции.",45,3,"Проверь граничные значения."]
+    ]},
+    ai:{name:"Искусственный интеллект",criteria:["Понятно, что делает модель","Есть проверка результата","Указаны ограничения"],tasks:[
+      ["Объяснить своими словами, как работает нейросеть: 10 предложений и схема.",30,1,"Без формул — через аналогию."],
+      ["Обучить простую модель классификации на готовом датасете и записать метрики.",60,2,"Сравни точность на train и test."],
+      ["Разобрать 3 случая галлюцинаций ИИ и предложить способ проверки.",30,2,"Проверяй по первоисточнику."],
+      ["Составить этический чек-лист использования ИИ в учёбе из 7 пунктов.",25,3,"Один пункт — про чужие данные."]
+    ]},
+    prompt:{name:"Промпт-инжиниринг",criteria:["Промпт воспроизводим","Есть критерии качества ответа","Сравнение обосновано"],tasks:[
+      ["Написать 3 промпта: объяснить тему, сгенерировать тесты, отревьюить код.",35,1,"Роль — задача — контекст — формат."],
+      ["Разобрать свой промпт по схеме: роль, задача, контекст, формат, критерии.",25,1,"Чего не хватает — допиши."],
+      ["Сравнить ответы двух моделей на один промпт и сделать вывод.",30,2,"Оцени по 3 критериям и поставь баллы."],
+      ["Составить промпт-цепочку из 3 шагов для учебного проекта.",35,3,"Каждый шаг опирается на результат предыдущего."]
+    ]},
+    pm:{name:"Управление ИТ-проектами",criteria:["Задачи измеримы","Есть сроки и ответственные","Риски названы"],tasks:[
+      ["Составить план спринта на 2 недели: 8 задач, оценки, риски.",40,1,"Оценка — в часах, не в «нормально»."],
+      ["Написать 3 user story с критериями приёмки.",30,1,"Формат: как… я хочу… чтобы…"],
+      ["Сделать диаграмму Ганта для учебного проекта.",30,2,"Покажи зависимости между задачами."],
+      ["Провести ретроспективу: 3 плюса, 3 проблемы, 3 действия.",25,3,"Действия должны быть выполнимы за неделю."]
+    ]},
+    devops:{name:"DevOps и облака",criteria:["Конфигурация воспроизводится","Есть README с командами","Ошибки обработаны"],tasks:[
+      ["Собрать Dockerfile для своего проекта и объяснить каждую строку.",45,1,"Начни с минимального образа."],
+      ["Настроить GitHub Actions: тесты на каждый push.",45,2,"Секреты — только через настройки репозитория."],
+      ["Развернуть приложение на бесплатном хостинге и прислать ссылку.",60,2,"Проверь логи после деплоя."],
+      ["Описать схему CI/CD для учебной команды.",30,3,"Где хранятся артефакты и секреты?"]
+    ]},
+    arch:{name:"Архитектура и ревью кода",criteria:["Схема читается","Замечания аргументированы","Есть план исправлений"],tasks:[
+      ["Разобрать свой проект по слоям и нарисовать схему.",40,1,"Где UI, логика и данные?"],
+      ["Найти 5 «запахов» кода и исправить.",45,2,"Длинные функции и дубли — первые кандидаты."],
+      ["Провести код-ревью чужого проекта по чек-листу.",40,2,"Замечание без объяснения — не замечание."],
+      ["Составить план рефакторинга на 5 шагов.",30,3,"Каждый шаг не ломает работающий код."]
+    ]},
+    sec:{name:"Кибербезопасность",criteria:["Нет реальных чужих данных","Есть выводы","Рекомендации выполнимы"],tasks:[
+      ["Найти 5 уязвимостей в учебном коде: SQL-инъекции, XSS, слабые пароли.",40,1,"Работай только со своим учебным проектом."],
+      ["Составить чек-лист безопасного хранения паролей.",25,1,"Хеширование и соль — обязательные пункты."],
+      ["Настроить HTTPS и объяснить, как работает TLS.",30,2,"Сертификат — не то же самое, что шифрование."],
+      ["Проверить свой проект по OWASP Top 10 и записать выводы.",40,3,"Отметь, что уже закрыто, а что нет."]
+    ]},
+    diploma:{name:"Диплом и демоэкзамен",criteria:["Есть план и сроки","Материалы собраны в одном месте","Проверено на репетиции"],tasks:[
+      ["Составить план диплома: 5 глав, сроки, источники.",40,1,"Каждая глава — с результатом."],
+      ["Собрать портфолио: 3 проекта, описание, стек.",45,2,"Один проект — с ИИ-функцией."],
+      ["Подготовить демо проекта на 5 минут: сценарий и слайды.",40,2,"Показывай результат, а не код."],
+      ["Написать резюме junior-разработчика и проверить по 10 пунктам.",40,3,"Навыки — фактами, а не прилагательными."]
+    ]}
+  };
+
+  BANK.git = {name:"Git и командная работа", criteria:["История коммитов читается","Ветки названы по смыслу","Конфликты разобраны, а не удалены"], tasks:[
+    ["Создать ветку, сделать три коммита и слить в основную.",30,1,"Коммит — одно законченное изменение."],
+    ["Разрешить учебный конфликт в двух файлах и объяснить решение.",35,2,"Сначала прочитай обе версии."],
+    ["Настроить .gitignore и убрать лишние файлы из истории.",25,2,"В истории не должно быть мусора и секретов."],
+    ["Провести код-ревью pull request по чек-листу.",40,3,"Замечание без объяснения — не замечание."]
+  ]};
+  BANK.api = {name:"Серверная разработка и API", criteria:["Эндпоинты описаны","Коды ответов корректны","Ошибки обработаны"], tasks:[
+    ["Описать три REST-эндпоинта: метод, путь, тело, ответ.",30,1,"Ресурс — существительное, действие — метод."],
+    ["Сделать запрос к учебному API и обработать ошибку 404.",35,1,"Ошибка — тоже часть сценария."],
+    ["Добавить валидацию входных данных и коды ответов.",40,2,"Проверяй вход до бизнес-логики."],
+    ["Написать документацию к своему API.",40,3,"Пример запроса и ответа обязателен."]
+  ]};
+  BANK.linux = {name:"Linux и командная строка", criteria:["Команды выполнены","Скрипт запускается","Есть объяснение результата"], tasks:[
+    ["Выполнить 10 команд: файлы, права, процессы; записать вывод.",25,1,"Начни с pwd, ls, cd."],
+    ["Написать bash-скрипт резервного копирования папки.",40,2,"Проверь, что скрипт не удаляет лишнего."],
+    ["Найти процесс, занявший порт, и освободить его.",25,2,"Помогут lsof или ss."],
+    ["Настроить SSH-ключ и объяснить, как проходит вход.",30,3,"Ключ — это пара файлов."]
+  ]};
+
+  BANK.eng.name = "Технический английский";
+
+  var COURSE_SUBJECTS = {
+    1:["py","algo","db"],
+    2:["web","qa","git"],
+    3:["devops","arch","sec"],
+    4:["ai","prompt","pm"]
+  };
+
+  function $(id){return document.getElementById(id);}
+  function num(v){return typeof v === "number";}
+
+  function renderPlan(){
+    var html = "";
+    COURSES.forEach(function(c){
+      var courseHours = c.sems.reduce(function(s,sem){
+        return s + sem.subjects.reduce(function(a,r){return a + r[1];},0);
+      },0);
+      courseHours += (c.extras || []).reduce(function(a,e){return a + e[1];},0);
+
+      html += '<article class="course" id="course-' + c.n + '">';
+      html += '<div class="course-head"><div class="num">' + c.n + '</div><div><h3>Модуль ' + c.n + ' — ' + c.title + '</h3><p>' + c.note + '</p></div><div class="course-hours">' + courseHours + ' ч</div></div>';
+
+      c.sems.forEach(function(sem){
+        var h = sem.subjects.reduce(function(a,r){return a + r[1];},0);
+        var w = sem.subjects.reduce(function(a,r){return a + (num(r[2]) ? r[2] : 0);},0);
+        var p = sem.subjects.reduce(function(a,r){return a + (num(r[3]) ? r[3] : 0);},0);
+
+        html += '<div class="sem-block"><div class="sem-title">' + sem.weeks + ' недель <span>' + (w ? w + ' уроков в неделю · ' + h + ' часов' : 'практика и аттестация · ' + h + ' часов') + '</span></div>';
+        html += '<div class="table-wrap"><table><thead><tr><th>Дисциплина</th><th class="num">Часов</th><th class="num">В неделю</th><th class="num">Практика</th><th>Контроль</th></tr></thead><tbody>';
+        sem.subjects.forEach(function(r){
+          var cls = String(r[4]).indexOf("экзамен") > -1 ? "tag exam" : "tag";
+          html += '<tr><td>' + r[0] + '</td><td class="num">' + r[1] + '</td><td class="num">' + r[2] + '</td><td class="num">' + r[3] + '</td><td><span class="' + cls + '">' + r[4] + '</span></td></tr>';
+        });
+        html += '</tbody><tfoot><tr><td>Итого за модуль</td><td class="num">' + h + '</td><td class="num">' + (w || "—") + '</td><td class="num">' + (p || "—") + '</td><td></td></tr></tfoot></table></div></div>';
+      });
+
+      if(c.extras && c.extras.length){
+        html += '<div class="sem-block"><div class="sem-title">Практика <span>входит в общий объём программы</span></div><div class="table-wrap"><table><thead><tr><th>Практика</th><th class="num">Часов</th><th>Срок</th></tr></thead><tbody>';
+        c.extras.forEach(function(e){
+          html += '<tr><td>' + e[0] + '</td><td class="num">' + e[1] + '</td><td>' + e[2] + '</td></tr>';
+        });
+        html += '</tbody></table></div></div>';
+      }
+      html += '</article>';
+    });
+    $("planRoot").innerHTML = html;
+
+    var total = 0, rows = "";
+    COURSES.forEach(function(c){
+      var h = c.sems.reduce(function(s,sem){
+        return s + sem.subjects.reduce(function(a,r){return a + r[1];},0);
+      },0) + (c.extras || []).reduce(function(a,e){return a + e[1];},0);
+      total += h;
+      rows += '<tr><td>Модуль ' + c.n + '</td><td>' + c.title + '</td><td class="num">' + h + '</td></tr>';
+    });
+    $("summaryTable").innerHTML = '<thead><tr><th>Модуль</th><th>Содержание</th><th class="num">Часов</th></tr></thead><tbody>' + rows + '</tbody><tfoot><tr><td colspan="2">Итого за ускоренный курс</td><td class="num">' + total + '</td></tr></tfoot>';
+    $("statHours").textContent = total.toLocaleString("ru-RU");
+
+    var count = 0;
+    Object.keys(BANK).forEach(function(k){ count += BANK[k].tasks.length; });
+    $("statTasks").textContent = count;
+  }
+
+  function statusCard(){
+    var startVal = $("startDate").value;
+    if(!startVal){ return; }
+    var start = new Date(startVal + "T00:00:00");
+    var now = new Date();
+    now.setHours(0,0,0,0);
+    var days = Math.floor((now - start) / 86400000);
+    var week = Math.floor(days / 7) + 1;
+    var totalWeeks = 4 * 3;
+
+    if(days < 0){
+      $("nowCourse").textContent = "Ещё не началось";
+      $("nowSem").textContent = "старт " + start.toLocaleDateString("ru-RU");
+      $("nowLeft").textContent = Math.abs(Math.ceil(days / 7)) + " недель до старта";
+      $("nowSubjects").innerHTML = "";
+      return;
+    }
+    if(week > totalWeeks){ week = totalWeeks; }
+    var mod = Math.min(4, Math.ceil(week / 3));
+    var weekInMod = ((week - 1) % 3) + 1;
+    var left = 3 - weekInMod + 1;
+
+    $("nowCourse").textContent = "Модуль " + mod + " · " + COURSES[mod - 1].title;
+    $("nowSem").textContent = week + "-я неделя курса · " + weekInMod + "-я неделя модуля";
+    $("nowLeft").textContent = left + " " + (left === 1 ? "неделя" : left < 5 ? "недели" : "недель");
+
+    var top = COURSES[mod - 1].sems[0].subjects.filter(function(r){return num(r[2]) && r[2] >= 3;}).slice(0,6);
+    $("nowSubjects").innerHTML = top.map(function(r){
+      return '<span class="chip">' + r[0] + ' · ' + r[2] + ' в неделю</span>';
+    }).join("") || '<span class="chip">Практика и итоговый проект</span>';
+  }
+
+  var LVL = {1:"базовый",2:"средний",3:"продвинутый"};
+  var STORE = "plan-hw-v1";
+  var state = null;
+  try{ state = JSON.parse(localStorage.getItem(STORE) || "null"); }catch(e){ state = null; }
+
+  function save(){ try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
+
+  function fmtDate(d){
+    return d.toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit",year:"numeric"});
+  }
+
+  function fillSubjects(){
+    var course = $("mCourse").value;
+    var keys = COURSE_SUBJECTS[course] || [];
+    var cur = $("mSubject").value;
+    $("mSubject").innerHTML = keys.map(function(k){
+      return '<option value="' + k + '"' + (k === cur ? " selected" : "") + '>' + BANK[k].name + '</option>';
+    }).join("");
+  }
+
+  function pick(key, level, count){
+    var set = BANK[key];
+    var pool = set.tasks.map(function(t,i){return {i:i, t:t};});
+    var byLevel = pool.filter(function(x){return x.t[2] === level;});
+    var rest = pool.filter(function(x){return x.t[2] !== level;});
+    byLevel.sort(function(){return Math.random() - 0.5;});
+    rest.sort(function(){return Math.random() - 0.5;});
+    var arr = byLevel.concat(rest).slice(0, Math.min(count, pool.length));
+    return arr.map(function(x){
+      return {
+        id: key + "-" + x.i,
+        subject: set.name,
+        text: x.t[0],
+        min: x.t[1],
+        level: x.t[2],
+        hint: x.t[3] || "",
+        done: false
+      };
+    });
+  }
+
+  function makeHomework(subjects, counts, level, days){
+    var tasks = [];
+    subjects.forEach(function(key, idx){
+      tasks = tasks.concat(pick(key, level, counts[idx] || 1));
+    });
+    var due = new Date();
+    due.setDate(due.getDate() + Number(days));
+    state = {
+      title: subjects.length === 1 ? BANK[subjects[0]].name : "ДЗ на неделю",
+      subjects: subjects,
+      due: due.toISOString(),
+      tasks: tasks,
+      criteria: subjects.length === 1 ? BANK[subjects[0]].criteria : [
+        "Каждое задание оформлено отдельно",
+        "Есть подтверждение выполнения: файл, скриншот или запись",
+        "Сдано до дедлайна"
+      ],
+      created: new Date().toISOString()
+    };
+    save();
+    renderHw();
+  }
+
+  function renderHw(){
+    var box = $("hwBox");
+    if(!state || !state.tasks || !state.tasks.length){
+      box.innerHTML = '<div class="hw-empty"><b>Пока заданий нет.</b><br>Выбери предмет и нажми «Задать домашнее задание». Наставник соберёт работу по уровню и поставит срок.</div>';
+      return;
+    }
+    var done = state.tasks.filter(function(t){return t.done;}).length;
+    var totalMin = state.tasks.reduce(function(a,t){return a + t.min;},0);
+    var pct = Math.round(done / state.tasks.length * 100);
+    var due = new Date(state.due);
+
+    var html = '<div class="hw-head"><div class="hw-subject">' + state.title + '</div><div class="hw-due">сдать до ' + fmtDate(due) + '</div></div>';
+    html += '<div class="hw-meta">' + state.tasks.length + ' задани' + (state.tasks.length === 1 ? "е" : "я") + ' · примерно ' + totalMin + ' минут · выполнено ' + done + ' из ' + state.tasks.length + '</div>';
+    html += '<div class="bar"><span style="width:' + pct + '%"></span></div>';
+    html += '<ol class="hw-list">';
+    state.tasks.forEach(function(t){
+      var cid = "c-" + t.id;
+      html += '<li><div><input type="checkbox" id="' + cid + '" data-id="' + t.id + '"' + (t.done ? " checked" : "") + '></div><div>';
+      html += '<label class="task-text' + (t.done ? " done" : "") + '" for="' + cid + '">' + t.text + '</label>';
+      html += '<div class="task-meta">' + t.subject + ' · ' + t.min + ' мин · уровень: ' + LVL[t.level] + '</div>';
+      if(t.hint){ html += '<details><summary>Подсказка</summary><p>' + t.hint + '</p></details>'; }
+      html += '</div></li>';
+    });
+    html += '</ol>';
+
+    if(state.criteria && state.criteria.length){
+      html += '<div class="criteria"><b>Критерии приёмки</b><ul>' + state.criteria.map(function(c){return '<li>' + c + '</li>';}).join("") + '</ul></div>';
+    }
+    html += '<div class="hw-actions"><button class="btn small" id="hwCopy">Скопировать задание</button><button class="btn small" id="hwNew">Новое задание</button><button class="btn small" id="hwClear">Очистить</button></div>';
+    box.innerHTML = html;
+
+    $("hwCopy").onclick = function(){
+      var text = "Домашнее задание: " + state.title + "\nСдать до: " + fmtDate(due) + "\n\n" + state.tasks.map(function(t,i){
+        return (i + 1) + ". " + t.text + " (" + t.min + " мин)";
+      }).join("\n");
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text);
+        this.textContent = "Скопировано";
+        var b = this;
+        setTimeout(function(){ b.textContent = "Скопировать задание"; }, 1600);
+      }
+    };
+    $("hwNew").onclick = function(){
+      $("mGenerate").click();
+    };
+    $("hwClear").onclick = function(){
+      state = null;
+      save();
+      renderHw();
+    };
+    box.querySelectorAll("input[type=checkbox]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var t = state.tasks.filter(function(x){return x.id === cb.getAttribute("data-id");})[0];
+        if(!t) return;
+        t.done = cb.checked;
+        save();
+        renderHw();
+      });
+    });
+  }
+
+  function bind(){
+    $("startDate").addEventListener("change", statusCard);
+    $("mCourse").addEventListener("change", fillSubjects);
+    $("mGenerate").addEventListener("click", function(){
+      var key = $("mSubject").value;
+      var level = Number($("mLevel").value);
+      var count = Number($("mCount").value);
+      makeHomework([key], [count], level, $("mDue").value);
+    });
+    $("mWeek").addEventListener("click", function(){
+      var course = $("mCourse").value;
+      var keys = (COURSE_SUBJECTS[course] || []).slice();
+      keys.sort(function(){return Math.random() - 0.5;});
+      keys = keys.slice(0, 3);
+      makeHomework(keys, [2,2,2], Number($("mLevel").value), 7);
+    });
+    document.querySelectorAll(".copy").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var el = $(btn.getAttribute("data-k"));
+        var txt = el.textContent;
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(txt);
+          var old = btn.textContent;
+          btn.textContent = "Скопировано";
+          setTimeout(function(){ btn.textContent = old; }, 1500);
+        }
+      });
+    });
+  }
+
+  var LESSONS = {
+    rus:[
+      ["Причастный оборот","Видеть границы оборота и ставить запятые",
+       ["Оборот отвечает на вопрос «какой?» и относится к существительному","Запятые нужны, если оборот стоит после определяемого слова","Одиночное причастие перед существительным обычно не обособляется"],
+       ["Когда оборот обособляется?","Всегда","Если стоит после определяемого слова","Если стоит перед ним",1,"Оборот после определяемого слова выделяется запятыми."],
+       "Выпиши 5 предложений из §14, найди обороты и расставь запятые."],
+      ["Сложноподчинённое предложение","Различать типы придаточных и чертить схемы",
+       ["Главная часть и придаточная связаны союзом или союзным словом","Тип придаточного определяется вопросом от главной части","Схема показывает границы частей и тип связи"],
+       ["Как определить тип придаточного?","По союзу","По вопросу от главной части","По количеству запятых",1,"Задаём вопрос от главной части к придаточной."],
+       "Разбери 5 предложений: основы, вопрос, схема."]
+    ],
+    math:[
+      ["Производная: смысл и правила","Понимать, что показывает производная, и брать её по правилам",
+       ["Производная — скорость изменения функции в точке","Правила суммы, произведения и степени закрывают большинство задач","В точке производная равна угловому коэффициенту касательной"],
+       ["Что показывает производная в точке?","Значение функции","Скорость изменения функции","Площадь под графиком",1,"Производная — это скорость изменения."],
+       "Найди производные 6 функций и объясни каждый шаг."],
+      ["Исследование функции","Строить график по алгоритму, а не по точкам",
+       ["Сначала область определения и нули функции","Знак производной показывает рост и падение","Смена знака производной даёт максимум или минимум"],
+       ["Если производная меняет знак с плюса на минус, то в точке…","Минимум","Максимум","Перегиб",1,"Плюс на минус — максимум."],
+       "Исследуй y = x³ − 3x по алгоритму и построй график."]
+    ],
+    eng:[
+      ["IT-лексика и Present Perfect","Рассказывать о результате и опыте в коде",
+       ["Present Perfect — результат к настоящему моменту","since — точка старта, for — длительность","20 слов по теме IT учим с примерами"],
+       ["I ___ this bug already.","fix","have fixed","fixing",1,"Результат к настоящему — have fixed."],
+       "Составь 10 предложений о своём опыте в программировании."],
+      ["Reading: how the internet works","Читать технический текст и выносить факты",
+       ["Данные идут пакетами, а не одним куском","DNS переводит имя сайта в IP-адрес","Клиент отправляет запрос, сервер отвечает"],
+       ["What does DNS do?","Шифрует трафик","Переводит имя сайта в IP","Ускоряет браузер",1,"DNS — телефонная книга интернета."],
+       "Прочитай текст, выпиши 10 слов и 5 фактов."]
+    ],
+    py:[
+      ["Переменные и типы","Писать первые программы с вводом и выводом",
+       ["int, float, str, bool — четыре базовых типа","input() всегда возвращает строку","f-строка подставляет значения в текст"],
+       ["Что вернёт input()?","Число","Строку","Список",1,"Ввод всегда строка, число надо приводить."],
+       "Напиши программу: спроси имя и возраст, выведи приветствие."],
+      ["Циклы и условия","Управлять ходом программы",
+       ["if/elif/else выбирает ветку","for идёт по range или коллекции","while требует условия выхода"],
+       ["Сколько раз выполнится range(3)?","2","3","4",1,"range(3) даёт 0, 1, 2 — три шага."],
+       "Выведи таблицу умножения и FizzBuzz от 1 до 30."]
+    ],
+    algo:[
+      ["Сложность алгоритмов","Оценивать код до запуска",
+       ["O(1) — константа, O(n) — линейный рост, O(n²) — вложенные циклы","Считаем худший случай","Константы и младшие члены отбрасываем"],
+       ["Сложность двух вложенных циклов по n?","O(n)","O(n²)","O(log n)",1,"Вложенность умножает число шагов."],
+       "Оцени сложность 5 функций и запиши вывод."],
+      ["Бинарный поиск","Сокращать поиск вдвое",
+       ["Работает только на отсортированном массиве","Каждый шаг отбрасывает половину","Сложность O(log n)"],
+       ["Сколько шагов для 1024 элементов?","10","32","1024",0,"1024 = 2 в десятой степени, значит около 10 шагов."],
+       "Реализуй алгоритм и проверь на 5 массивах."]
+    ],
+    db:[
+      ["Реляционная модель","Проектировать таблицы и связи",
+       ["Таблица — relation, строка — запись, столбец — атрибут","Первичный ключ уникален, внешний ссылается на другой","Связь 1:N реализуется внешним ключом"],
+       ["Что хранит внешний ключ?","Ссылку на первичный ключ другой таблицы","Любой текст","Номер строки",0,"Внешний ключ ссылается на PK."],
+       "Спроектируй 4 таблицы для библиотеки."],
+      ["SELECT и фильтры","Доставать нужные строки",
+       ["SELECT выбирает столбцы, WHERE — строки","AND и OR комбинируют условия","ORDER BY и LIMIT управляют выводом"],
+       ["Что делает WHERE?","Сортирует","Фильтрует строки","Соединяет таблицы",1,"WHERE фильтрует строки."],
+       "Напиши 8 запросов к учебной базе."]
+    ],
+    web:[
+      ["HTML-семантика","Строить страницу из осмысленных блоков",
+       ["header, main и footer задают структуру","alt и label нужны для доступности","Семантика помогает поиску и скринридерам"],
+       ["Зачем семантические теги?","Для цвета","Для структуры и доступности","Для скорости",1,"Семантика — это структура и доступность."],
+       "Сверстай страницу-визитку из семантических блоков."],
+      ["CSS: flexbox и grid","Раскладывать элементы без танцев",
+       ["Flex — ряд или колонка по одной оси","Grid — сетка по двум осям","Media-запросы делают адаптив"],
+       ["Что делает justify-content?","Распределяет по главной оси","Меняет шрифт","Задаёт отступы",0,"Главная ось — направление flex."],
+       "Сделай карточки: 3 в ряд на десктопе, 1 на телефоне."]
+    ],
+    qa:[
+      ["Виды тестирования","Понимать, что и зачем проверяем",
+       ["Функциональное — что делает, нефункциональное — как","Позитивные и негативные сценарии","Уровни: модульный, интеграционный, системный"],
+       ["Проверка скорости — это…","Функциональное","Нефункциональное","Регрессия",1,"Скорость — нефункциональное."],
+       "Составь 10 тест-кейсов для формы входа."],
+      ["Баг-репорт","Описывать баг так, чтобы его починили",
+       ["Шаги воспроизведения — по одному действию","Ожидаемый и фактический результат","Серьёзность и приоритет — разные вещи"],
+       ["Что важнее всего в баг-репорте?","Эмоции","Воспроизводимость","Скриншот",1,"Без воспроизведения баг не починить."],
+       "Оформи 3 баг-репорта по учебному коду."]
+    ],
+    ai:[
+      ["Как работает нейросеть","Объяснять ИИ без магии",
+       ["Нейросеть — слои с весами","Обучение — подбор весов под данные","Качество зависит от данных и проверки"],
+       ["Что измеряет функция потерь?","Скорость","Ошибку модели","Размер данных",1,"Потери — это ошибка модели."],
+       "Объясни нейросеть на аналогии и нарисуй схему."],
+      ["Промпты и галлюцинации","Получать полезный ответ и проверять его",
+       ["Структура: роль, задача, контекст, формат","Модель может уверенно ошибаться","Факт проверяем по первоисточнику"],
+       ["Лучший способ проверить факт от ИИ?","Спросить ещё раз","Открыть первоисточник","Поверить",1,"Первоисточник — единственная проверка."],
+       "Составь 3 промпта и проверь один ответ по источнику."]
+    ],
+    prompt:[
+      ["Структура промпта","Писать промпт как техзадание",
+       ["Роль задаёт точку зрения","Задача и контекст убирают догадки","Формат и критерии задают результат"],
+       ["Чего чаще всего не хватает промпту?","Вежливости","Формата и критериев","Длины",1,"Без формата ответ не проверить."],
+       "Перепиши свой промпт по схеме и сравни ответы."],
+      ["Промпт-цепочки","Решать сложное по шагам",
+       ["Один шаг — один результат","Результат шага передаём дальше","Между шагами проверяем"],
+       ["Зачем цепочка промптов?","Чтобы было длиннее","Чтобы разбить сложную задачу","Чтобы сэкономить",1,"Цепочка делит задачу на проверяемые шаги."],
+       "Собери цепочку из 3 шагов для учебного проекта."]
+    ],
+    pm:[
+      ["Agile и Scrum","Понимать, как работает команда",
+       ["Спринт — 1–2 недели","Роли: владелец продукта, скрам-мастер, команда","Бэклог и инкремент — артефакты"],
+       ["Кто ведёт бэклог продукта?","Скрам-мастер","Владелец продукта","Тестировщик",1,"Бэклог ведёт владелец продукта."],
+       "Составь план спринта на 8 задач."],
+      ["User story и оценка","Формулировать задачи и оценивать",
+       ["Формат: как… я хочу… чтобы…","Критерии приёмки — условие готовности","Оценка в часах, а не в ощущениях"],
+       ["Что такое критерий приёмки?","Пожелание","Условие, при котором задача готова","Срок",1,"Критерий приёмки проверяем."],
+       "Напиши 3 user story с критериями."]
+    ],
+    devops:[
+      ["Docker","Упаковать проект в контейнер",
+       ["Образ — шаблон, контейнер — запущенный экземпляр","Dockerfile описывает сборку","Контейнер делит ядро ОС"],
+       ["Чем контейнер отличается от виртуальной машины?","Делит ядро ОС","Тяжелее","Не изолирован",0,"Контейнер легче, потому что делит ядро."],
+       "Собери Dockerfile для своего проекта."],
+      ["CI/CD","Автоматизировать сборку и деплой",
+       ["Пайплайн: сборка, тесты, деплой","CI проверяет каждый push","CD доставляет в среду"],
+       ["Что делает CI?","Собирает и тестирует","Пишет код","Рисует интерфейс",0,"CI — непрерывная интеграция и проверка."],
+       "Опиши пайплайн и настрой GitHub Actions."]
+    ]
+  };
+
+  LESSONS.oop = [
+    ["Классы и объекты","Проектировать классы, а не наборы функций",
+     ["Класс — шаблон, объект — экземпляр","Инкапсуляция прячет детали реализации","Один метод — одна операция"],
+     ["Что такое инкапсуляция?","Скрытие внутреннего устройства","Наследование","Копирование кода",0,"Инкапсуляция — детали внутри класса."],
+     "Спроектируй класс BankAccount с пятью методами и проверками."],
+    ["Наследование и композиция","Выбирать правильный инструмент",
+     ["Наследование — отношение «является»","Композиция — «содержит»","Композиция гибче в большинстве задач"],
+     ["Когда наследование уместно?","Когда объект — частный случай","Всегда","Когда нужно сэкономить код",0,"Наследование — для отношений «является»."],
+     "Перепиши три класса с наследованием на композицию."]
+  ];
+  LESSONS.git = [
+    ["Ветки и коммиты","Работать в Git без страха",
+     ["Ветка — указатель на коммит","Коммит должен быть атомарным","История читается по сообщениям"],
+     ["Зачем нужна ветка?","Менять код отдельно от основной версии","Для резервной копии","Для скорости",0,"Ветка изолирует работу."],
+     "Создай ветку, сделай три коммита и слей в основную."],
+    ["Слияние и конфликты","Решать конфликты осознанно",
+     ["Конфликт — правка одного места в двух ветках","Сначала читаем, потом выбираем","Merge и rebase дают разную историю"],
+     ["Что делать при конфликте?","Удалить файл","Разобрать изменения и выбрать решение","Откатить всё",1,"Конфликт решается вручную."],
+     "Разреши учебный конфликт и объясни решение."]
+  ];
+  LESSONS.api = [
+    ["REST и эндпоинты","Проектировать понятный API",
+     ["Ресурс — существительное, действие — HTTP-метод","Коды ответов говорят о результате","Тело запроса и ответа — JSON"],
+     ["Какой метод создаёт ресурс?","GET","POST","DELETE",1,"Создание — POST."],
+     "Опиши три эндпоинта: метод, путь, тело, ответ."],
+    ["Ошибки и валидация","Не ронять API на плохих данных",
+     ["404 — нет ресурса, 400 — ошибка клиента, 500 — сервер","Валидация идёт до бизнес-логики","Ошибка должна быть понятной"],
+     ["Что вернуть, если ресурс не найден?","200","404","500",1,"404 — ресурс не найден."],
+     "Добавь валидацию и коды ответов в свой API."]
+  ];
+  LESSONS.linux = [
+    ["Командная строка","Работать в терминале уверенно",
+     ["Пути и права доступа","Процессы и порты","Конвейеры соединяют команды"],
+     ["Какая команда покажет процессы?","ls","ps","cd",1,"Процессы — ps."],
+     "Выполни 10 команд и запиши результат."],
+    ["Скрипты и автоматизация","Автоматизировать рутину",
+     ["Скрипт — файл с командами","Переменные и условия","Крон запускает по расписанию"],
+     ["Чем запускается bash-скрипт?","bash script.sh","open script.sh","run script.sh",0,"Скрипт запускает интерпретатор."],
+     "Напиши скрипт резервного копирования папки."]
+  ];
+
+  LESSONS.arch = [
+    ["Слои и архитектура","Разделять ответственность в коде",
+     ["UI, логика и данные — разные слои","Зависимости идут в одну сторону","Слой можно заменить, не ломая остальное"],
+     ["Зачем разделять слои?","Чтобы менять части независимо","Для красоты","Чтобы было больше файлов",0,"Слои уменьшают связанность."],
+     "Разбери свой проект по слоям и нарисуй схему."],
+    ["Рефакторинг и ревью","Улучшать код без поломок",
+     ["Сначала тесты, потом изменения","Маленькие шаги и частая проверка","Замечание без объяснения — не замечание"],
+     ["С чего начинать рефакторинг?","С тестов","С переписывания всего","С удаления файлов",0,"Тесты фиксируют поведение."],
+     "Найди пять запахов кода и исправь по одному."]
+  ];
+  LESSONS.sec = [
+    ["Уязвимости web","Видеть типовые дыры",
+     ["SQL-инъекции и XSS — от недоверенного ввода","Проверяй вход, экранируй вывод","Работай только со своим учебным кодом"],
+     ["Где появляется SQL-инъекция?","При склейке строк в запрос","При использовании параметров","В CSS",0,"Склейка строк — причина инъекции."],
+     "Найди пять уязвимостей в учебном проекте и опиши, как закрыть."],
+    ["Пароли и доступ","Защищать аккаунты и данные",
+     ["Пароли хранят хешем с солью","Права выдаются по минимуму","Секреты не хранят в коде"],
+     ["Как хранить пароли?","В открытом виде","Хеш с солью","В логах",1,"Только хеш с солью."],
+     "Составь чек-лист безопасного хранения паролей."]
+  ];
+
+  var LESSON_COURSE = {1:["py","algo","oop","db"],2:["web","api","qa","git"],3:["arch","devops","sec","linux"],4:["ai","prompt","pm","eng"]};
+
+  var CLASS_KEY = "plan-class-v1";
+  var CLS = {hw:{}, checks:{}, reports:{}, work:{}, done:{}, video:{}};
+  try{
+    var rawCls = localStorage.getItem(CLASS_KEY);
+    if(rawCls){ CLS = JSON.parse(rawCls); }
+    ["hw","checks","reports","work","done","video"].forEach(function(k){ if(!CLS[k]){ CLS[k] = {}; } });
+  }catch(e){}
+  function clsSave(){ try{ localStorage.setItem(CLASS_KEY, JSON.stringify(CLS)); }catch(e){} }
+
+  var STAGES = [["Организация",2],["Проверка ДЗ",5],["Теория",12],["Видео",6],["Практика",10],["Итог и ДЗ",5]];
+  var L = null, videoTimer = null, videoPos = 0, videoPlaying = false, vidFrames = [];
+
+  function practicum(key){
+    var b = LESSONS[key];
+    var t1 = b[0][0].toLowerCase(), t2 = b[1] ? b[1][0].toLowerCase() : t1;
+    return ["Практикум: " + t1 + " и " + t2, "Собрать темы двух уроков в один результат",
+      ["Новой теории сегодня нет","Два задания по пройденным темам","В конце — мини-проект"],
+      ["Что важнее при сборке проекта?","Скорость","Работающий результат","Красивый код",1,"Сначала работает, потом улучшаем."],
+      "Собери мини-проект по двум темам и покажи, что он делает.",
+      [{text:"Доделать мини-проект: описание, код, скриншот работы.",min:60}]];
+  }
+  function lessonList(key){
+    var out = (LESSONS[key] || []).slice();
+    out.push(practicum(key));
+    return out;
+  }
+  function hwFor(key, idx){
+    var base = LESSONS[key] || [];
+    if(idx >= base.length){ return practicum(key)[5]; }
+    var t = BANK[key].tasks, out = [];
+    [idx*2, idx*2+1].forEach(function(i){ if(t[i]){ out.push({text:t[i][0], min:t[i][1]}); } });
+    return out;
+  }
+  function say(t){ var el = $("aiSay"); if(el){ el.textContent = t; } }
+  function fmtClock(s){ s = Math.max(0, Math.ceil(s)); var m = Math.floor(s/60), x = s%60; return m + ":" + (x<10?"0":"") + x; }
+  function totalLeft(){ var s = L.secLeft, i; for(i=L.stage+1;i<STAGES.length;i++){ s += STAGES[i][1]*60; } return s; }
+  function updateClock(){ if(!L){ return; } var c = $("clock"); if(c){ c.textContent = fmtClock(totalLeft()); } }
+  function renderBar(){
+    var total = 0, i;
+    for(i=0;i<STAGES.length;i++){ total += STAGES[i][1]; }
+    var html = "";
+    for(i=0;i<STAGES.length;i++){
+      var cls = i < L.stage ? "done" : (i === L.stage ? "active" : "");
+      html += '<div class="' + cls + '" style="width:' + (STAGES[i][1]/total*100).toFixed(2) + '%" title="' + STAGES[i][0] + '"></div>';
+    }
+    $("stageBar").innerHTML = html;
+  }
+
+  function startLesson(){
+    var key = $("lSubject").value, idx = Number($("lLesson").value);
+    var list = lessonList(key);
+    if(!list[idx]){ return; }
+    L = {key:key, idx:idx, data:list[idx], stage:0, secLeft:STAGES[0][1]*60, running:true, speed:1, last:Date.now()};
+    $("lSpeed").textContent = "1×";
+    $("lPause").textContent = "Пауза";
+    $("lessonKicker").textContent = $("lCourse").selectedOptions[0].textContent + " · " + BANK[key].name + " · урок " + (idx+1) + " из " + list.length;
+    $("lessonTitle").textContent = list[idx][0];
+    $("lesson").classList.remove("hidden");
+    renderStage();
+    renderJournal();
+    if($("lesson").scrollIntoView){ $("lesson").scrollIntoView({behavior:"smooth", block:"start"}); }
+  }
+
+  function renderStage(){
+    if(videoTimer){ clearInterval(videoTimer); videoTimer = null; videoPlaying = false; }
+    videoPos = 0;
+    var s = STAGES[L.stage];
+    $("stageName").textContent = s[0] + " · " + s[1] + " мин";
+    renderBar(); updateClock();
+    var html = "";
+    if(L.stage === 0){ html = stageOrg(); }
+    else if(L.stage === 1){ html = stageCheck(); }
+    else if(L.stage === 2){ html = stageTheory(); }
+    else if(L.stage === 3){ html = stageVideo(); }
+    else if(L.stage === 4){ html = stagePractice(); }
+    else { html = stageSummary(); }
+    $("stageCol").innerHTML = html;
+    bindStage();
+    $("lNext").textContent = L.stage === 5 ? "Завершить пару" : "Дальше";
+  }
+
+  function nextStage(){
+    if(!L){ return; }
+    if(videoTimer){ clearInterval(videoTimer); videoTimer = null; videoPlaying = false; }
+    if(L.stage >= STAGES.length - 1){ finishLesson(); return; }
+    L.stage++;
+    L.secLeft = STAGES[L.stage][1] * 60;
+    L.running = true;
+    $("lPause").textContent = "Пауза";
+    if(L.stage === 5){ assignHomework(L.key + "-" + L.idx, hwFor(L.key, L.idx)); }
+    renderStage();
+  }
+
+  function finishLesson(){
+    if(!L){ return; }
+    L.running = false;
+    CLS.done[L.key + "-" + L.idx] = true;
+    clsSave();
+    say("Пара закончена. Домашнее задание записано — на следующем уроке начинаем с проверки.");
+    $("stageName").textContent = "Пара завершена";
+    $("stageCol").innerHTML = '<h4>Пара завершена</h4><p>Тема: «' + L.data[0] + '». 40 минут позади, домашнее задание ждёт.</p><p class="mini">Выбери следующий урок — он начнётся с проверки этой работы.</p>';
+    $("lNext").textContent = "Дальше";
+    renderJournal();
+  }
+
+  function stageOrg(){
+    say("Здравствуй. Сегодня пара по предмету «" + BANK[L.key].name + "». Тема: «" + L.data[0] + "». Работаем 40 минут: объяснение, видеофрагмент, практика и домашнее задание. Нажми «Дальше», когда будешь готов.");
+    var html = '<h4>Цель урока</h4><p>' + L.data[1] + '</p><audio controls preload="none" src="audio-09.02.11/' + L.key + '-' + L.idx + '.mp3" style="width:100%;margin:4px 0 12px;height:36px"></audio><div class="criteria"><b>План пары</b><ul>';
+    STAGES.forEach(function(s){ html += '<li>' + s[0] + ' — ' + s[1] + ' мин</li>'; });
+    html += '</ul></div><p class="mini" style="margin-top:10px">Таймер идёт сам. Можно поставить паузу или ускорить темп кнопкой «1×».</p>';
+    return html;
+  }
+
+  function stageCheck(){
+    var prevId = L.key + "-" + (L.idx - 1);
+    var rec = L.idx > 0 ? CLS.hw[prevId] : null;
+    if(rec){
+      say("Сначала проверка домашнего задания с прошлой пары. Отметь, что сделано, и напиши короткий отчёт: что получилось, а что нет.");
+      return checkHtml(prevId, rec);
+    }
+    say("Разминка перед теорией: один вопрос. Отвечай без подсказок.");
+    var q = L.data[3];
+    var html = '<h4>Разминка</h4><p><b>' + q[0] + '</b></p><div id="quiz">';
+    for(var i=0;i<3;i++){ html += '<button class="quiz-opt" data-i="' + i + '">' + q[i+1] + '</button>'; }
+    return html + '</div><div id="quizWhy"></div>';
+  }
+
+  function checkHtml(prevId, rec){
+    var chk = CLS.checks[prevId];
+    var html = '<h4>Домашнее задание с прошлой пары</h4><div id="checkTasks">';
+    rec.tasks.forEach(function(t,i){
+      html += '<label class="check-task"><input type="checkbox" data-i="' + i + '"' + (t.done ? " checked" : "") + '><span><b>' + (i+1) + '.</b> ' + t.text + '<span class="task-meta">' + t.min + ' мин</span></span></label>';
+    });
+    html += '</div>';
+    if(chk){
+      html += verdictHtml(chk);
+      html += '<div class="hw-actions"><button class="btn small" id="checkAgain">Пересдать</button><button class="btn small" id="checkCopy">Спросить ИИ в MultiTool</button></div>';
+    } else {
+      var rv = (CLS.reports[prevId] || "").replace(/</g, "&lt;");
+      html += '<label class="field" style="margin-top:12px"><span>Короткий отчёт: что сделал, что не получилось, что осталось непонятным</span><textarea id="checkReport" placeholder="Например: сделал два задания, в третьем не сошёлся ответ — проверь решение.">' + rv + '</textarea></label>';
+      html += '<div class="hw-actions"><button class="btn primary" id="checkRun">Проверить работу</button><button class="btn small" id="checkCopy">Спросить ИИ в MultiTool</button></div>';
+    }
+    return html;
+  }
+
+  function verdictHtml(chk){
+    var good = chk.score >= 4;
+    var txt = "Сдано " + chk.done + " из " + chk.total + ". Отчёт: " + chk.len + " символов. Разбор ошибки: " + (chk.mentions ? "есть" : "нет") + ".";
+    var advice = chk.score === 5 ? "Отлично: всё сдано, ошибки разобраны." :
+      chk.score === 4 ? "Хорошо. Добавь разбор ошибок — что именно не получилось и как исправил." :
+      chk.score === 3 ? "Половина пути. Донеси остальные задания и допиши отчёт." :
+      "Пока мало. Отметь сделанное и напиши, где застрял, — разберём на паре.";
+    return '<div class="verdict' + (good ? "" : " bad") + '"><b>Оценка: ' + chk.score + '</b><p>' + txt + '</p><p>' + advice + '</p></div>';
+  }
+
+  function stageTheory(){
+    say("Объясняю главное. Три вещи, которые нужно понять к концу пары.");
+    var html = '<h4>Главное</h4><ol class="bullets">';
+    L.data[2].forEach(function(b){ html += '<li>' + b + '</li>'; });
+    html += '</ol><div class="criteria"><b>Как записывать конспект</b><ul><li>Тезис — своими словами</li><li>Один пример на каждый тезис</li><li>Вопрос, который остался</li></ul></div>';
+    return html;
+  }
+
+  function stageVideo(){
+    say("Смотрим короткий видеофрагмент. Это анимированный конспект темы из четырёх кадров. Можно поставить на паузу.");
+    vidFrames = [L.data[1]].concat(L.data[2]);
+    var html = '<h4>Видеофрагмент</h4><div class="video-box" id="videoBox">';
+    for(var i=0;i<vidFrames.length;i++){
+      html += '<div class="frame' + (i === 0 ? " on" : "") + '" data-f="' + i + '"><b>Кадр ' + (i+1) + ' из ' + vidFrames.length + '</b><p>' + vidFrames[i] + '</p></div>';
+    }
+    html += '</div><div class="video-ctl"><button class="btn small" id="videoPlay">Смотреть</button><button class="btn small" id="videoNext">Следующий кадр</button><span class="mini" id="videoMeta">0:00 / 0:20</span></div>';
+    html += '<label class="field" style="margin-top:14px"><span>Или вставь ссылку на настоящее видео (YouTube) — оно откроется в новой вкладке</span><input id="videoLink" placeholder="https://..." value="' + (CLS.video[L.key + "-" + L.idx] || "") + '"></label>';
+    html += '<button class="btn small" id="videoSet">Показать видео</button>';
+    return html;
+  }
+
+  function stepFrame(dir){
+    var frames = document.querySelectorAll("#videoBox .frame");
+    if(!frames.length){ return; }
+    videoPos = (videoPos + dir + frames.length) % frames.length;
+    for(var i=0;i<frames.length;i++){ frames[i].className = "frame" + (i === videoPos ? " on" : ""); }
+    var meta = $("videoMeta");
+    if(meta){ meta.textContent = "0:" + String(videoPos*5).padStart(2,"0") + " / 0:20"; }
+  }
+
+  function toggleVideo(){
+    if(!$("videoBox")){ return; }
+    videoPlaying = !videoPlaying;
+    $("videoPlay").textContent = videoPlaying ? "Пауза" : "Смотреть";
+    if(videoPlaying){
+      videoTimer = setInterval(function(){ if(videoPlaying){ stepFrame(1); } }, 5000);
+    } else if(videoTimer){
+      clearInterval(videoTimer); videoTimer = null;
+    }
+  }
+
+  function showVideo(){
+    var u = $("videoLink").value.trim();
+    if(!u){ return; }
+    CLS.video[L.key + "-" + L.idx] = u;
+    clsSave();
+    var box = $("videoBox");
+    box.innerHTML = "";
+    var m = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{6,})/);
+    if(m){
+      var ifr = document.createElement("iframe");
+      ifr.src = "https://www.youtube.com/embed/" + m[1];
+      ifr.allowFullscreen = true;
+      ifr.style.cssText = "position:absolute;inset:0;width:100%;height:100%;border:0";
+      box.appendChild(ifr);
+    } else {
+      var f = document.createElement("div");
+      f.className = "frame on";
+      f.innerHTML = '<b>Ссылка сохранена</b><p>Открой её в новой вкладке, чтобы посмотреть видео.</p>';
+      box.appendChild(f);
+      window.open(u, "_blank", "noopener");
+    }
+  }
+
+  function stagePractice(){
+    say("Теперь практика. Задание похоже на домашнее, но проще. Десять минут.");
+    var saved = (CLS.work[L.key + "-" + L.idx] || "").replace(/</g, "&lt;");
+    return '<h4>Практика · 10 минут</h4><p>' + L.data[4] + '</p>' +
+      '<textarea id="practiceText" placeholder="Напиши решение, код или план...">' + saved + '</textarea>' +
+      '<div class="hw-actions"><button class="btn small" id="practiceSave">Сохранить</button><span class="mini" id="practiceMeta">' + (saved ? "Сохранено" : "") + '</span></div>';
+  }
+
+  function stageSummary(){
+    var id = L.key + "-" + L.idx;
+    var rec = CLS.hw[id];
+    say("Итог пары. Домашнее задание записано — на следующем уроке начнём с проверки.");
+    var html = '<h4>Итог</h4><p>' + L.data[1] + '</p>';
+    if(rec){
+      html += '<div class="criteria"><b>Домашнее задание к следующему уроку</b><ul>';
+      rec.tasks.forEach(function(t){ html += '<li>' + t.text + ' · ' + t.min + ' мин</li>'; });
+      html += '</ul><p class="mini">Сдать до ' + new Date(rec.due).toLocaleDateString("ru-RU") + '. Проверка — в начале следующей пары.</p></div>';
+    }
+    html += '<p class="mini" style="margin-top:10px">Нажми «Завершить пару», чтобы отметить урок пройденным.</p>';
+    return html;
+  }
+
+  function assignHomework(id, tasks){
+    if(CLS.hw[id]){ renderJournal(); return; }
+    var due = new Date();
+    due.setDate(due.getDate() + 3);
+    CLS.hw[id] = {tasks: tasks.map(function(t){ return {text:t.text, min:t.min, done:false}; }), due: due.toISOString(), at: new Date().toISOString()};
+    clsSave();
+    renderJournal();
+  }
+
+  function bindStage(){
+    var q = L.data[3];
+    var opts = document.querySelectorAll("#quiz .quiz-opt");
+    for(var i=0;i<opts.length;i++){
+      (function(btn){
+        btn.addEventListener("click", function(){
+          var pick = Number(btn.getAttribute("data-i")), right = Number(q[4]);
+          var all = document.querySelectorAll("#quiz .quiz-opt");
+          for(var j=0;j<all.length;j++){ all[j].disabled = true; }
+          if(pick === right){ btn.classList.add("ok"); }
+          else { btn.classList.add("bad"); all[right].classList.add("ok"); }
+          var box = $("quizWhy");
+          if(box){ box.innerHTML = '<div class="verdict' + (pick === right ? "" : " bad") + '"><b>' + (pick === right ? "Верно" : "Не совсем") + '</b><p>' + q[5] + '</p></div>'; }
+        });
+      })(opts[i]);
+    }
+    if($("checkRun")){ $("checkRun").addEventListener("click", runCheck); }
+    if($("checkAgain")){ $("checkAgain").addEventListener("click", function(){ delete CLS.checks[L.key + "-" + (L.idx-1)]; clsSave(); renderStage(); renderJournal(); }); }
+    if($("checkCopy")){ $("checkCopy").addEventListener("click", copyCheckPrompt); }
+    if($("practiceSave")){ $("practiceSave").addEventListener("click", function(){
+      CLS.work[L.key + "-" + L.idx] = $("practiceText").value;
+      clsSave();
+      $("practiceMeta").textContent = "Сохранено";
+    }); }
+    if($("videoPlay")){ $("videoPlay").addEventListener("click", toggleVideo); }
+    if($("videoNext")){ $("videoNext").addEventListener("click", function(){ stepFrame(1); }); }
+    if($("videoSet")){ $("videoSet").addEventListener("click", showVideo); }
+  }
+
+  function runCheck(){
+    var id = L.key + "-" + (L.idx - 1);
+    var rec = CLS.hw[id];
+    if(!rec){ return; }
+    var inputs = document.querySelectorAll("#checkTasks input");
+    var done = 0, i;
+    for(i=0;i<inputs.length;i++){
+      rec.tasks[i].done = inputs[i].checked;
+      if(inputs[i].checked){ done++; }
+    }
+    var text = $("checkReport") ? $("checkReport").value : "";
+    var len = text.trim().length;
+    var mentions = /(ошибк|не получ|исправ|понял|сложн|разобрал|не сход)/i.test(text);
+    var total = rec.tasks.length;
+    var score = 2;
+    if(done === total && len >= 220 && mentions){ score = 5; }
+    else if(done === total && len >= 120){ score = 4; }
+    else if(done >= Math.ceil(total/2) && len >= 60){ score = 3; }
+    CLS.checks[id] = {score:score, done:done, total:total, len:len, mentions:mentions, at:new Date().toISOString()};
+    CLS.reports[id] = text;
+    clsSave();
+    renderStage();
+    renderJournal();
+  }
+
+  function copyCheckPrompt(){
+    var id = L.key + "-" + (L.idx - 1);
+    var rec = CLS.hw[id];
+    if(!rec){ return; }
+    var txt = "Проверь мою домашнюю работу по предмету «" + BANK[L.key].name + "». Задания:\n" +
+      rec.tasks.map(function(t,i){ return (i+1) + ". " + t.text; }).join("\n") +
+      "\n\nМой отчёт: " + ((CLS.reports[id] || "").trim() || "(пока пусто)") +
+      "\n\nДай 3 сильные стороны, 3 ошибки с объяснением и одно задание на отработку.";
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt); }
+  }
+
+  function fillLessonSubjects(){
+    var course = $("lCourse").value;
+    var keys = LESSON_COURSE[course] || [];
+    $("lSubject").innerHTML = keys.map(function(k){ return '<option value="' + k + '">' + BANK[k].name + '</option>'; }).join("");
+    fillLessonNumbers();
+  }
+  function fillLessonNumbers(){
+    var key = $("lSubject").value;
+    if(!key){ return; }
+    var list = lessonList(key);
+    $("lLesson").innerHTML = list.map(function(l,i){ return '<option value="' + i + '">Урок ' + (i+1) + '. ' + l[0] + '</option>'; }).join("");
+    previewLesson();
+    renderJournal();
+  }
+  function previewLesson(){
+    var key = $("lSubject").value;
+    if(!key){ return; }
+    var idx = Number($("lLesson").value);
+    var list = lessonList(key), l = list[idx];
+    if(!l){ return; }
+    var prevId = key + "-" + (idx-1);
+    var txt = "Урок " + (idx+1) + " из " + list.length + ". Цель: " + l[1] + ".";
+    if(idx > 0 && CLS.hw[prevId] && !CLS.checks[prevId]){ txt += " В начале — проверка домашнего задания."; }
+    txt += " Заданий на дом: " + hwFor(key, idx).length + ".";
+    $("lessonPreview").textContent = txt;
+  }
+  function renderJournal(){
+    var key = $("lSubject").value;
+    if(!key){ return; }
+    var list = lessonList(key), rows = "";
+    list.forEach(function(l,i){
+      var id = key + "-" + i;
+      var status = "Не начат", grade = "—";
+      if(CLS.checks[id]){ status = "ДЗ проверено"; grade = CLS.checks[id].score; }
+      else if(CLS.hw[id]){ status = "Идёт, ДЗ задано"; }
+      else if(CLS.done[id]){ status = "Пройден"; }
+      rows += '<tr><td>' + (i+1) + '</td><td>' + l[0] + '</td><td>' + status + '</td><td class="num">' + grade + '</td></tr>';
+    });
+    $("journalBox").innerHTML = '<div class="table-wrap"><table class="journal"><thead><tr><th>Урок</th><th>Тема</th><th>Статус</th><th class="num">Оценка</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  }
+  function togglePause(){
+    if(!L){ return; }
+    L.running = !L.running;
+    L.last = Date.now();
+    $("lPause").textContent = L.running ? "Пауза" : "Продолжить";
+  }
+  function tickLesson(){
+    if(!L){ return; }
+    var now = Date.now();
+    if(!L.running){ L.last = now; return; }
+    var dt = (now - L.last) / 1000;
+    L.last = now;
+    L.secLeft -= dt * L.speed;
+    if(L.secLeft <= 0){ L.secLeft = 0; updateClock(); nextStage(); return; }
+    updateClock();
+  }
+  function renderAudio(){
+    var box = $("audioList");
+    if(!box){ return; }
+    var html = "";
+    [1,2,3,4].forEach(function(mod){
+      html += '<h3 class="audio-mod">Модуль ' + mod + ' — ' + COURSES[mod-1].title + '</h3>';
+      (LESSON_COURSE[mod] || []).forEach(function(key){
+        for(var i=0;i<3;i++){
+          var title = "Практикум";
+          if(i < 2 && LESSONS[key] && LESSONS[key][i]){ title = LESSONS[key][i][0]; }
+          var file = "audio-09.02.11/" + key + "-" + i + ".mp3";
+          html += '<div class="audio-item"><div><b>' + BANK[key].name + '</b><span>Урок ' + (i+1) + ' · ' + title + '</span></div><audio controls preload="none" src="' + file + '"></audio><a class="btn small" href="' + file + '" download>Скачать</a></div>';
+        }
+      });
+    });
+    box.innerHTML = html;
+  }
+
+  function initClass(){
+    if(!$("lCourse")){ return; }
+    $("lCourse").addEventListener("change", fillLessonSubjects);
+    $("lSubject").addEventListener("change", fillLessonNumbers);
+    $("lLesson").addEventListener("change", previewLesson);
+    $("lStart").addEventListener("click", startLesson);
+    $("lNext").addEventListener("click", nextStage);
+    $("lPause").addEventListener("click", togglePause);
+    $("lSpeed").addEventListener("click", function(){
+      if(!L){ return; }
+      L.speed = L.speed === 1 ? 5 : (L.speed === 5 ? 10 : 1);
+      this.textContent = L.speed + "×";
+      L.last = Date.now();
+    });
+    $("lExit").addEventListener("click", function(){
+      L = null;
+      if(videoTimer){ clearInterval(videoTimer); videoTimer = null; }
+      $("lesson").classList.add("hidden");
+    });
+    fillLessonSubjects();
+    renderAudio();
+    setInterval(tickLesson, 250);
+  }
+
+
+
+
+  try{ globalThis.__LESSONS = LESSONS; globalThis.__BANK = BANK; globalThis.__LESSON_COURSE = LESSON_COURSE; }catch(e){}
+
+  renderPlan();
+  fillSubjects();
+  statusCard();
+  renderHw();
+  bind();
+  initClass();
+})();
+</script>
+</body>
+</html>
